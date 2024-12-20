@@ -4,13 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>19323f22-218b-42fe-a02a-5cc7ae6c0659</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>main.py</StartupFile>
+    <StartupFile>training_diffusion_models.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>simple-latent-diffusion-model</Name>
     <RootNamespace>simple-latent-diffusion-model</RootNamespace>
+    <InterpreterId>CondaEnv|CondaEnv|condatorch</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,11 +22,51 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="main.py" />
+    <Compile Include="auto_encoder\components\attn_b.py" />
+    <Compile Include="auto_encoder\components\distributions.py" />
+    <Compile Include="auto_encoder\components\normalize.py" />
+    <Compile Include="auto_encoder\components\resnet_b.py" />
+    <Compile Include="auto_encoder\components\sampling.py" />
+    <Compile Include="auto_encoder\helper\data_generator.py" />
+    <Compile Include="auto_encoder\helper\loader.py" />
+    <Compile Include="auto_encoder\helper\painter.py" />
+    <Compile Include="auto_encoder\helper\trainer.py" />
+    <Compile Include="auto_encoder\models\auto_encoder.py" />
+    <Compile Include="auto_encoder\models\decoder.py" />
+    <Compile Include="auto_encoder\models\encoder.py" />
+    <Compile Include="auto_encoder\models\variational_auto_encoder.py" />
+    <Compile Include="diffusion_model\helper\beta_generator.py" />
+    <Compile Include="diffusion_model\helper\data_generator.py" />
+    <Compile Include="diffusion_model\helper\loader.py" />
+    <Compile Include="diffusion_model\helper\painter.py" />
+    <Compile Include="diffusion_model\helper\trainer.py" />
+    <Compile Include="diffusion_model\helper\util.py" />
+    <Compile Include="diffusion_model\models\cond_diffusion_model.py" />
+    <Compile Include="diffusion_model\models\latent_diffusion_model.py" />
+    <Compile Include="diffusion_model\models\uncond_diffusion_model.py" />
+    <Compile Include="diffusion_model\network\attend.py" />
+    <Compile Include="diffusion_model\network\cond_u_net.py" />
+    <Compile Include="diffusion_model\network\uncond_u_net.py" />
+    <Compile Include="diffusion_model\network\u_net.py" />
+    <Compile Include="diffusion_model\sampler\ddim.py" />
+    <Compile Include="diffusion_model\sampler\ddpm.py" />
+    <Compile Include="training_auto_encoder.py" />
+    <Compile Include="training_diffusion_models.py" />
+    <Compile Include="training_uncond.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auto_encoder\" />
+    <Folder Include="auto_encoder\components\" />
+    <Folder Include="auto_encoder\helper\" />
+    <Folder Include="auto_encoder\models\" />
     <Folder Include="diffusion_model\" />
+    <Folder Include="diffusion_model\helper\" />
+    <Folder Include="diffusion_model\models\" />
+    <Folder Include="diffusion_model\network\" />
+    <Folder Include="diffusion_model\sampler\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="CondaEnv|CondaEnv|condatorch" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

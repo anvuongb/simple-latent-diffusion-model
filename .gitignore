@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore folders
+datasets/
+check_points/
+/datasets/
+/check_points/
+*.pth
+*.pt
+*.zip
