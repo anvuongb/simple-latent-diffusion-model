@@ -1,15 +1,24 @@
 import torch
 import torch.nn as nn
-import numpy as np
-from diffusion_model.helper.util import extract
 from tqdm import tqdm
+import yaml
+
+from helper.util import extract
+from helper.beta_generator import BetaGenerator
+
 
 class DDPM(nn.Module):
-    def __init__(self, T : int, betas):
+    def __init__(self, config_path):
         super(DDPM, self).__init__()
-        self.T = T
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)['sampler']
+        self.T = config['T']
+        beta_generator = BetaGenerator(T=self.T)
+        
         self.register_buffer('timesteps', torch.linspace(0, 999, steps = 1000, dtype = torch.int))
-        self.register_buffer('betas', betas)
+        self.register_buffer('betas', getattr(beta_generator,
+                                              f"{config['beta']}_beta_schedule",
+                                              beta_generator.linear_beta_schedule)())
         self.register_buffer('alphas', 1 - self.betas)
         self.register_buffer('alpha_bars', torch.cumprod(self.alphas, dim = 0))
         

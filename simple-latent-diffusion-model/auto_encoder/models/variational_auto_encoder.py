@@ -8,16 +8,16 @@ import yaml
 from auto_encoder.components.distributions import DiagonalGaussianDistribution
 
 class VariationalAutoEncoder(nn.Module):
-    def __init__(self, config_path, embed_dim):
+    def __init__(self, config_path):
         super().__init__()
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)
         self.add_module('encoder', Encoder(**config["encoder"]))
         self.add_module('decoder', Decoder(**config["decoder"]))
+        self.embed_dim = config['vae']['embed_dim']
         
-        self.quant_conv = torch.nn.Conv2d(self.decoder.z_channels, 2*embed_dim, 1)
-        self.post_quant_conv = torch.nn.Conv2d(embed_dim, self.decoder.z_channels, 1)
-        self.embed_dim = embed_dim
+        self.quant_conv = torch.nn.Conv2d(self.decoder.z_channels, 2*self.embed_dim, 1)
+        self.post_quant_conv = torch.nn.Conv2d(self.embed_dim, self.decoder.z_channels, 1)
 
     def encode(self, x):
         h = self.encoder(x)

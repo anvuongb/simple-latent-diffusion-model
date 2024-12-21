@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>19323f22-218b-42fe-a02a-5cc7ae6c0659</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>training_diffusion_models.py</StartupFile>
+    <StartupFile>training.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,7 +31,7 @@
     <Compile Include="auto_encoder\models\decoder.py" />
     <Compile Include="auto_encoder\models\encoder.py" />
     <Compile Include="auto_encoder\models\variational_auto_encoder.py" />
-    <Compile Include="diffusion_model\helper\beta_generator.py" />
+    <Compile Include="helper\beta_generator.py" />
     <Compile Include="helper\loader.py" />
     <Compile Include="helper\painter.py" />
     <Compile Include="helper\trainer.py" />
@@ -45,16 +45,13 @@
     <Compile Include="diffusion_model\network\u_net.py" />
     <Compile Include="diffusion_model\sampler\ddim.py" />
     <Compile Include="diffusion_model\sampler\ddpm.py" />
-    <Compile Include="training_auto_encoder.py" />
-    <Compile Include="training_diffusion_models.py" />
-    <Compile Include="training_uncond.py" />
+    <Compile Include="training.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auto_encoder\" />
     <Folder Include="auto_encoder\components\" />
     <Folder Include="auto_encoder\models\" />
     <Folder Include="diffusion_model\" />
-    <Folder Include="diffusion_model\helper\" />
     <Folder Include="diffusion_model\models\" />
     <Folder Include="diffusion_model\network\" />
     <Folder Include="diffusion_model\sampler\" />

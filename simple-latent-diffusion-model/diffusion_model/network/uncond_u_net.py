@@ -1,11 +1,15 @@
-from diffusion_model.network.u_net import Unet
 import torch.nn as nn
 import torch
 
+from diffusion_model.network.u_net import Unet
+import yaml
+
 class UnconditionalUnetwork(nn.Module):
-    def __init__(self, in_channels, channels, channels_multipliers = (1, 2, 4, 8)):
+    def __init__(self, config_path):
         super().__init__()
-        self.add_module('network', Unet(dim = channels, dim_mults = channels_multipliers, channels = in_channels))
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)['unet']
+        self.add_module('network', Unet(dim=config['dim'], dim_mults=config['dim_mults'], channels=config['channels']))
         
     def forward(self, x, t):
         if t.dim() == 0:

@@ -1,13 +1,18 @@
-from diffusion_model.network.u_net import Unet
 import torch.nn as nn
 import torch
 
+from diffusion_model.network.u_net import Unet
+import yaml
+
 class ConditionalUnetwork(nn.Module):
-    def __init__(self, num_c, class_emb_size, in_channels, channels, channels_multipliers = (1, 2, 4, 8)):
+    def __init__(self, config_path):
         super().__init__()
-        self.class_emb_size = class_emb_size
-        self.embedding = nn.Embedding(num_c, self.class_emb_size)
-        self.add_module('network', Unet(dim = channels, dim_mults = channels_multipliers, channels = in_channels + self.class_emb_size, out_dim = in_channels))
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)['unet']
+        
+        self.class_emb_size = config['class_emb_size']
+        self.embedding = nn.Embedding(config['num_class'], self.class_emb_size)
+        self.add_module('network', Unet(dim=config['dim'], dim_mults=config['dim_mults'], channels=config['channels']+self.class_emb_size, out_dim=config['channels']))
         
     def forward(self, x, t, cond):
         if t.dim() == 0:

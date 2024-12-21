@@ -1,3 +1,4 @@
+#source : https://github.com/CompVis/latent-diffusion/blob/main/ldm/modules/diffusionmodules/model.py#L368
 import torch
 import torch.nn as nn
 import numpy as np

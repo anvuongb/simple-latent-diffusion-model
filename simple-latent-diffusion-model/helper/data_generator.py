@@ -1,7 +1,6 @@
 from torchvision.datasets import CIFAR10
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, ToTensor, Lambda
-from tqdm import tqdm
 
 class DataGenerator():
     def __init__(self, ):

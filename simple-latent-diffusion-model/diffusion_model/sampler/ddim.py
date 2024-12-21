@@ -1,25 +1,35 @@
+#source: https://nn.labml.ai/diffusion/stable_diffusion/sampler/ddim.html
 import torch
 import torch.nn as nn
 import numpy as np
-from diffusion_model.helper.util import extract
+import yaml
 from tqdm import tqdm
 
+from helper.util import extract
+from helper.beta_generator import BetaGenerator
+
 class DDIM(nn.Module):
-    def __init__(self, T : int, betas, ddim_T : int, ddim_eta = 1.):
+    def __init__(self, config_path):
         super(DDIM, self).__init__()
-        self.T = T
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)['sampler']
+        self.T = config['T']
+        beta_generator = BetaGenerator(T=self.T)
+        
         self.register_buffer('timesteps', torch.linspace(0, 999, steps = 1000, dtype = torch.int))
-        self.register_buffer('betas', betas)
+        self.register_buffer('betas', getattr(beta_generator,
+                                              f"{config['beta']}_beta_schedule",
+                                              beta_generator.linear_beta_schedule)())
         self.register_buffer('alphas', 1 - self.betas)
         self.register_buffer('alpha_bars', torch.cumprod(self.alphas, dim = 0))
 
-        step = self.T // ddim_T
+        step = self.T // config['ddim_T']
         timesteps = torch.tensor(np.asarray(list(range(0, self.T, step))) + 1)
         self.ddim_timesteps = timesteps
         self.ddim_alpha = self.alpha_bars[self.ddim_timesteps].clone()
         self.ddim_alpha_sqrt = torch.sqrt(self.ddim_alpha)
         self.ddim_alpha_prev = torch.cat([self.alpha_bars[0:1], self.alpha_bars[self.ddim_timesteps[:-1]]])
-        self.ddim_sigma = (ddim_eta * 
+        self.ddim_sigma = (config['ddim_eta'] * 
                             torch.sqrt((1-self.ddim_alpha_prev) / (1-self.ddim_alpha) *
                             (1 - self.ddim_alpha / self.ddim_alpha_prev)))
         self.ddim_sqrt_one_minus_alpha = torch.sqrt(1. - self.ddim_alpha)

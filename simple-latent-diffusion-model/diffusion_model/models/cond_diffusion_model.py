@@ -12,7 +12,7 @@ class ConditionalDiffusionModel(UnconditionalDiffusionModel) :
         t = torch.randint(0, self.T, (x0.size(0),), device = x0.device)
         x_t = self.sampler.q_sample(x0, t, eps)
         eps_hat = self.network(x = x_t, t = t, cond = cond)
-        return self.weighted_loss(eps, eps_hat, loss_weight)
+        return self.weighted_loss(t, eps, eps_hat)
             
     @torch.no_grad()
     def forward(self, cond, n_samples : int = 4):

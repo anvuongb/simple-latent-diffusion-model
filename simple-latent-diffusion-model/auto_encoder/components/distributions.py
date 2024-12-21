@@ -1,3 +1,4 @@
+#source: https://github.com/CompVis/latent-diffusion/blob/main/ldm/modules/distributions/distributions.py
 import torch
 import numpy as np
 

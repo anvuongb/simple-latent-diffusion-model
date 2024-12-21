@@ -11,24 +11,24 @@ class UnconditionalDiffusionModel(nn.Module) :
         self.sampler.set_network(network)
         self.T = sampler.T
         self.image_shape = image_shape
-        alpha_bars = self.model.sampler.alpha_bars
+        alpha_bars = self.sampler.alpha_bars
         snr = alpha_bars / (1 - alpha_bars)
         maybe_clipped_snr = snr.clone()
         maybe_clipped_snr.clamp_(max = 5)
-        self.loss_weight = maybe_clipped_snr / snr
+        self.register_buffer('loss_weight', maybe_clipped_snr / snr)
         
-    def weighted_loss(self, eps, eps_hat):
+    def weighted_loss(self, t, eps, eps_hat):
         loss = nn.functional.mse_loss(eps, eps_hat, reduction='none')
         loss = reduce(loss, 'b ... -> b', 'mean')
-        loss = loss * extract(self.loss_weight)
-        return loss
+        loss = loss * extract(self.loss_weight, t, loss.shape)
+        return loss.mean()
         
     def loss(self, x0):
         eps = torch.randn_like(x0)
         t = torch.randint(0, self.T, (x0.size(0),), device = x0.device)
         x_t = self.sampler.q_sample(x0, t, eps)
         eps_hat = self.network(x = x_t, t = t)
-        return self.weighted_loss(eps, eps_hat)
+        return self.weighted_loss(t, eps, eps_hat)
             
     @torch.no_grad()
     def forward(self, n_samples : int = 4):
