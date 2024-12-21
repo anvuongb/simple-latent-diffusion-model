@@ -25,7 +25,7 @@ class BetaGenerator():
         as proposed in https://openreview.net/forum?id=-NEXDKk8gZ
         """
         steps = self.T + 1
-        t = torch.linspace(0, self.T, steps, dtype = torch.float64) / self.T
+        t = torch.linspace(0, self.T, steps, dtype = torch.float32) / self.T
         alphas_cumprod = torch.cos((t + s) / (1 + s) * math.pi * 0.5) ** 2
         alphas_cumprod = alphas_cumprod / alphas_cumprod[0]
         betas = 1 - (alphas_cumprod[1:] / alphas_cumprod[:-1])
@@ -38,7 +38,7 @@ class BetaGenerator():
         better for images > 64x64, when used during training
         """
         steps = self.T + 1
-        t = torch.linspace(0, self.T, steps, dtype = torch.float64) / self.T
+        t = torch.linspace(0, self.T, steps, dtype = torch.float32) / self.T
         v_start = torch.tensor(start / tau).sigmoid()
         v_end = torch.tensor(end / tau).sigmoid()
         alphas_cumprod = (-((t * (end - start) + start) / tau).sigmoid() + v_end) / (v_end - v_start)

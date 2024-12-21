@@ -13,9 +13,7 @@ class ConditionalUnetwork(nn.Module):
         if t.dim() == 0:
             t = x.new_full((x.size(0), ), t, dtype = torch.int, device = x.device)
         n, _, w, h = x.shape
-        
         cond = self.embedding(cond)
         cond = cond.view(x.size(0), self.class_emb_size, 1, 1).expand(n, self.class_emb_size, w, h)
         x = torch.cat((x, cond), 1)
-        
         return self.network(x, t)

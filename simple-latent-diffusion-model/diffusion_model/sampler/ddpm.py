@@ -13,6 +13,9 @@ class DDPM(nn.Module):
         self.register_buffer('alphas', 1 - self.betas)
         self.register_buffer('alpha_bars', torch.cumprod(self.alphas, dim = 0))
         
+    def set_network(self, network : nn.Module):
+        self.network = network
+        
     def q_sample(self, x0, t, eps = None):
         alpha_t_bar = extract(self.alpha_bars, t, x0.shape)
         if eps is None:
@@ -35,8 +38,7 @@ class DDPM(nn.Module):
         return x
     
     @torch.no_grad()
-    def forward(self, network : nn.Module, x_T, **kwargs):
-        self.network = network
+    def forward(self, x_T, **kwargs):
         return self.reverse_process(x_T, **kwargs)
     
     @torch.no_grad()

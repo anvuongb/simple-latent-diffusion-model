@@ -1,5 +1,4 @@
 import torch
-from auto_encoder.models.auto_encoder import AutoEncoder
 from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
 import os
 
@@ -19,20 +18,28 @@ if __name__ == '__main__':
     a = next(iter(dl))[0][0:2]
     pt.show_or_save_images(a)
     
-    ae = VariationalAutoEncoder(config_path = './auto_encoder/configs/cifar10_config.yaml',embed_dim=8).to(device)
+    ae = VariationalAutoEncoder(config_path = './auto_encoder/configs/cifar10_config.yaml',embed_dim=3).to(device)
     
     d, post = ae(a.to(device))
     pt.show_or_save_images(d)
 
     ld = Loader()
-    ld.load_with_acc(file_name = './auto_encoder/check_points/cifar10_epoch81',model = ae)
-    
-    
+    ld.load_with_acc(file_name = './auto_encoder/check_points/embed3_epoch51',model = ae)
 
-    #tr = Trainer(ae, loss_fn = ae.loss, no_label=True)
-    #tr.accelerated_train(dl, 100, './auto_encoder/check_points/cifar10')
     
-    d = ae(a.to(device))[0]
+    #tr = Trainer(ae, loss_fn = ae.loss, no_label=True)
+    #tr.accelerated_train(dl, 300, './auto_encoder/check_points/embed3')
+    d, post = ae(a.to(device))
+    print(post.sample())
+    pt.show_or_save_images(d)
+    
+    d = ae(a.to(device) + torch.randn_like(a).to(device) * 0.1)[0]
+    pt.show_or_save_images(d)
+    
+    d = ae.decode( torch.randn(10, 3, 8, 8).to(device) )
+    pt.show_or_save_images(d)
+    
+    d = ae.decode( torch.zeros(10, 3, 8, 8).to(device) )
     pt.show_or_save_images(d)
    
    

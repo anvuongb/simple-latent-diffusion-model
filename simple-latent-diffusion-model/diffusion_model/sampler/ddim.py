@@ -24,6 +24,9 @@ class DDIM(nn.Module):
                             (1 - self.ddim_alpha / self.ddim_alpha_prev)))
         self.ddim_sqrt_one_minus_alpha = torch.sqrt(1. - self.ddim_alpha)
         
+    def set_network(self, network : nn.Module):
+        self.network = network
+        
     def q_sample(self, x0, t, eps = None):
         alpha_t_bar = extract(self.alpha_bars, t, x0.shape)
         if eps is None:
@@ -54,8 +57,7 @@ class DDIM(nn.Module):
         return x
     
     @torch.no_grad()
-    def forward(self, network : nn.Module, x_T, temperature = 1., **kwargs):
-        self.network = network
+    def forward(self, x_T, temperature = 1., **kwargs):
         return self.reverse_process(x_T, temperature, **kwargs)
     
     @torch.no_grad()

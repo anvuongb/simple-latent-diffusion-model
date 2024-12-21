@@ -32,7 +32,7 @@ class VariationalAutoEncoder(nn.Module):
     
     def loss(self, x, kld_weight = 1e-6):
         x_hat, posterior = self(x)
-        return F.mse_loss(x, x_hat) + torch.mean(kld_weight * posterior.kl())
+        return F.mse_loss(x, x_hat) + kld_weight * posterior.kl().mean() 
 
     def forward(self, input, sample_posterior=True):
         posterior = self.encode(input)

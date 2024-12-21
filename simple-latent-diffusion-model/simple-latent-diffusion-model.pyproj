@@ -22,25 +22,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="auto_encoder\components\attn_b.py" />
     <Compile Include="auto_encoder\components\distributions.py" />
     <Compile Include="auto_encoder\components\normalize.py" />
     <Compile Include="auto_encoder\components\resnet_b.py" />
     <Compile Include="auto_encoder\components\sampling.py" />
-    <Compile Include="auto_encoder\helper\data_generator.py" />
-    <Compile Include="auto_encoder\helper\loader.py" />
-    <Compile Include="auto_encoder\helper\painter.py" />
-    <Compile Include="auto_encoder\helper\trainer.py" />
+    <Compile Include="helper\data_generator.py" />
     <Compile Include="auto_encoder\models\auto_encoder.py" />
     <Compile Include="auto_encoder\models\decoder.py" />
     <Compile Include="auto_encoder\models\encoder.py" />
     <Compile Include="auto_encoder\models\variational_auto_encoder.py" />
     <Compile Include="diffusion_model\helper\beta_generator.py" />
-    <Compile Include="diffusion_model\helper\data_generator.py" />
-    <Compile Include="diffusion_model\helper\loader.py" />
-    <Compile Include="diffusion_model\helper\painter.py" />
-    <Compile Include="diffusion_model\helper\trainer.py" />
-    <Compile Include="diffusion_model\helper\util.py" />
+    <Compile Include="helper\loader.py" />
+    <Compile Include="helper\painter.py" />
+    <Compile Include="helper\trainer.py" />
+    <Compile Include="helper\util.py" />
     <Compile Include="diffusion_model\models\cond_diffusion_model.py" />
     <Compile Include="diffusion_model\models\latent_diffusion_model.py" />
     <Compile Include="diffusion_model\models\uncond_diffusion_model.py" />
@@ -57,13 +52,13 @@
   <ItemGroup>
     <Folder Include="auto_encoder\" />
     <Folder Include="auto_encoder\components\" />
-    <Folder Include="auto_encoder\helper\" />
     <Folder Include="auto_encoder\models\" />
     <Folder Include="diffusion_model\" />
     <Folder Include="diffusion_model\helper\" />
     <Folder Include="diffusion_model\models\" />
     <Folder Include="diffusion_model\network\" />
     <Folder Include="diffusion_model\sampler\" />
+    <Folder Include="helper\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="CondaEnv|CondaEnv|condatorch" />
