@@ -23,13 +23,17 @@ if __name__ == '__main__':
     data_generator = DataGenerator()
     data_loader = data_generator.cifar10(batch_size = 128)
     painter = Painter()
+    loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    trainer = Trainer(vae, loss_fn = vae.loss)
-    trainer.train(data_loader, 300, VAE_FILE_NAME, True)
+    loader.load('./auto_encoder/check_points/embed3_epoch74', vae, ema=False)
     
     sampler = DDIM(CONFIG_PATH)
     network = ConditionalUnetwork(CONFIG_PATH)
     dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
-    trainer = Trainer(dm, dm.loss)
-    trainer.train(data_loader, 300, DM_FILE_NAME, False)
+    loader.load('./diffusion_model/check_points/ldm_epoch1', dm, ema=True)
+    
+    sample = dm(4, 12)
+    painter.show_images(sample)
+    
+    

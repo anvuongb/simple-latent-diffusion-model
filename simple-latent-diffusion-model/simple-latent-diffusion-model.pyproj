@@ -45,6 +45,7 @@
     <Compile Include="diffusion_model\network\u_net.py" />
     <Compile Include="diffusion_model\sampler\ddim.py" />
     <Compile Include="diffusion_model\sampler\ddpm.py" />
+    <Compile Include="sampling.py" />
     <Compile Include="training.py" />
   </ItemGroup>
   <ItemGroup>
