@@ -1,6 +1,6 @@
 encoder:
     in_channels: 3
-    resolution: 32
+    resolution: 128
     channels: 128
     channels_multipliers: [1, 2, 4]
     z_channels: 3
@@ -10,7 +10,7 @@ encoder:
 decoder:
     in_channels: 3
     out_channels: 3
-    resolution: 32
+    resolution: 128
     channels: 128
     channels_multipliers: [1, 2, 4]
     z_channels: 6
@@ -28,8 +28,7 @@ sampler:
     ddim_eta: 1
 
 unet:
-    num_class: 10
-    class_emb_size: 4
-    dim: 64
+    num_conditions: 40
+    dim: 128
     dim_mults: [1, 2, 4, 8]
     channels: 3
