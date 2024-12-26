@@ -1,6 +1,6 @@
 # Welcome to the Simple Latent Diffusion Model
 
-🌐 README in Korean: [🇰🇷 한국어 버전](README_ko.md)
+🌐 README in Korean: [KR 한국어 버전](README_ko.md)
 
 This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
 
