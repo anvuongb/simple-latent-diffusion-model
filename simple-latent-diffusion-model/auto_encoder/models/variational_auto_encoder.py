@@ -15,7 +15,7 @@ class VariationalAutoEncoder(nn.Module):
         self.add_module('encoder', Encoder(**config["encoder"]))
         self.add_module('decoder', Decoder(**config["decoder"]))
         self.embed_dim = config['vae']['embed_dim']
-        self.kld_weight = config['vae']['kld_weight']
+        self.kld_weight = float(config['vae']['kld_weight'])
         
         self.quant_conv = torch.nn.Conv2d(self.decoder.z_channels, 2*self.embed_dim, 1)
         self.post_quant_conv = torch.nn.Conv2d(self.embed_dim, self.decoder.z_channels, 1)
