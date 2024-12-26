@@ -25,7 +25,7 @@ class ResnetBlock(nn.Module):
             else:
                 self.nin_shortcut = torch.nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1, padding=0)
             
-    def forward(self, x, temb):
+    def forward(self, x):
         h = x
         h = self.norm1(h)
         h = nonlinearity(h)
