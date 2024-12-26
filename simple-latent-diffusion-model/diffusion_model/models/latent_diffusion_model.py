@@ -14,7 +14,7 @@ class LatentDiffusionModel(ConditionalDiffusionModel) :
         self.latent_shape = [*self.auto_encoder.decoder.z_shape[1:]]
         self.latent_shape[0] = self.auto_encoder.embed_dim
         
-    def loss(self, x0, cond, loss_weight = 1.0):
+    def loss(self, x0, cond):
         x0 = self.auto_encoder.encode(x0).sample()
         eps = torch.randn_like(x0)
         t = torch.randint(0, self.T, (x0.size(0),), device = x0.device)

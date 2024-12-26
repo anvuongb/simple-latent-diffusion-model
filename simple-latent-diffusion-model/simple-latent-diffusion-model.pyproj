@@ -23,8 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="auto_encoder\components\distributions.py" />
+    <Compile Include="auto_encoder\components\nonlinearity.py" />
     <Compile Include="auto_encoder\components\normalize.py" />
-    <Compile Include="auto_encoder\components\resnet_b.py" />
+    <Compile Include="auto_encoder\components\resnet_block.py" />
     <Compile Include="auto_encoder\components\sampling.py" />
     <Compile Include="helper\data_generator.py" />
     <Compile Include="auto_encoder\models\auto_encoder.py" />

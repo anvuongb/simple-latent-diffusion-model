@@ -3,19 +3,19 @@ import torch
 import torch.nn as nn
 import numpy as np
 from auto_encoder.components.normalize import Normalize
-from auto_encoder.components.resnet_b import ResnetBlock
+from auto_encoder.components.resnet_block import ResnetBlock
 from auto_encoder.components.sampling import Upsample
+from auto_encoder.components.nonlinearity import nonlinearity
 
 class Decoder(nn.Module):
     def __init__(self, *, in_channels, out_channels, resolution, channels, channels_multipliers = (1, 2, 4, 8), z_channels, num_res_blocks,
-                 dropout = 0.0, resample_with_conv : bool = True, double_z : bool = True):
+                 dropout = 0.0, resample_with_conv : bool = True):
         super().__init__()
         self.ch = channels
         self.num_resolutions = len(channels_multipliers)
         self.num_res_blocks = num_res_blocks
         self.in_channels = in_channels
         self.z_channels = z_channels
-        self.nonlinearity = nn.SiLU()
         
         in_ch_mult = (1 , ) + tuple(channels_multipliers)
         block_in = self.ch * in_ch_mult[self.num_resolutions - 1]
@@ -73,6 +73,6 @@ class Decoder(nn.Module):
         
         # end
         h = self.norm_out(h)
-        h = self.nonlinearity(h)
+        h = nonlinearity(h)
         h = self.conv_out(h)
         return h

@@ -1,9 +1,11 @@
 #source : https://github.com/CompVis/latent-diffusion/blob/main/ldm/modules/diffusionmodules/model.py#L368
 import torch
 import torch.nn as nn
+
 from auto_encoder.components.normalize import Normalize
-from auto_encoder.components.resnet_b import ResnetBlock
+from auto_encoder.components.resnet_block import ResnetBlock
 from auto_encoder.components.sampling import Downsample
+from auto_encoder.components.nonlinearity import nonlinearity
 
 class Encoder(nn.Module):
     def __init__(self, *, in_channels, resolution, channels, channels_multipliers = (1, 2, 4, 8), z_channels, num_res_blocks,
@@ -14,7 +16,6 @@ class Encoder(nn.Module):
         self.num_res_blocks = num_res_blocks
         self.in_channels = in_channels
         self.z_channels = z_channels
-        self.nonlinearity = nn.SiLU()
         
         # downsampling
         self.conv_in = torch.nn.Conv2d(in_channels, self.ch, kernel_size = 3, stride = 1, padding = 1)
@@ -27,8 +28,7 @@ class Encoder(nn.Module):
             block_in = self.ch * in_ch_mult[i_level]
             block_out = self.ch * channels_multipliers[i_level]
             for i_block in range(self.num_res_blocks):
-                block.append(ResnetBlock(in_channels = block_in, out_channels = block_out,
-                                         dropout = dropout))
+                block.append(ResnetBlock(in_channels = block_in, out_channels = block_out, dropout = dropout))
                 block_in = block_out
             down = nn.Module()
             down.block = block
@@ -65,7 +65,7 @@ class Encoder(nn.Module):
         
         # end
         h = self.norm_out(h)
-        h = self.nonlinearity(h)
+        h = nonlinearity(h)
         h = self.conv_out(h)
         return h
         

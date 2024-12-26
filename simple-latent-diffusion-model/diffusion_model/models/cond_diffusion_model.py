@@ -7,7 +7,7 @@ class ConditionalDiffusionModel(UnconditionalDiffusionModel) :
     def __init__(self, network : nn.Module, sampler : nn.Module, image_shape):
         super().__init__(network, sampler, image_shape)
         
-    def loss(self, x0, cond, loss_weight = 1.0):
+    def loss(self, x0, cond):
         eps = torch.randn_like(x0)
         t = torch.randint(0, self.T, (x0.size(0),), device = x0.device)
         x_t = self.sampler.q_sample(x0, t, eps)
