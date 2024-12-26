@@ -1,5 +1,9 @@
 # Welcome to the Simple Latent Diffusion Model
 
+🌐 Choose Your Language:  
+- [🇺🇸 English Version](README.md)  
+- [🇰🇷 한국어 버전](README_ko.md)
+
 This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
 
 ## References
