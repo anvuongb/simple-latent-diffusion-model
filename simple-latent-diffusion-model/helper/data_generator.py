@@ -13,3 +13,5 @@ class DataGenerator():
         train_data = CIFAR10(path, download = True, train = train, transform = self.transform)
         dl = DataLoader(train_data, batch_size, shuffle = True)
         return dl
+
+    

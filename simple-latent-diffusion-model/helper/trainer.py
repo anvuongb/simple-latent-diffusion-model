@@ -25,18 +25,19 @@ class Trainer():
         self.accelerator = Accelerator(mixed_precision = 'no')
         self.start_epoch = start_epoch
         self.best_loss = best_loss
+        self.ema = EMA(model).to(self.accelerator.device)
             
     def train(self, dl : DataLoader, epochs : int, file_name : str, no_label : bool = False):
         self.model.train()
-        model, optimizer, data_loader, scheduler = self.accelerator.prepare(
+        self.model, self.optimizer, data_loader, self.scheduler = self.accelerator.prepare(
             self.model, self.optimizer, dl, self.scheduler
             )
-        ema = EMA(model).to(self.accelerator.device)
         
         for epoch in range(self.start_epoch + 1, epochs + 1):
             epoch_loss = 0.0
             progress_bar = tqdm(data_loader, leave=False, desc=f"Epoch {epoch}/{epochs}", colour="#005500", disable = not self.accelerator.is_local_main_process)
             for batch in progress_bar:
+                self.optimizer.zero_grad()
                 if no_label: 
                     if type(batch) == list:
                         x = batch[0].to(self.accelerator.device)
@@ -49,25 +50,24 @@ class Trainer():
                 else:
                     loss = self.loss_fn(x, y)
 
-                optimizer.zero_grad()
                 self.accelerator.backward(loss)
-                optimizer.step()
-                ema.update()
+                self.optimizer.step()
                 epoch_loss += loss.item()
                 progress_bar.set_postfix(loss=epoch_loss / len(progress_bar))
                 
-            scheduler.step()
-            epoch_loss = epoch_loss / len(progress_bar)
-            log_string = f"Loss at epoch {epoch}: {epoch_loss :.4f}"
+            self.accelerator.wait_for_everyone()
             if self.accelerator.is_main_process:
+                self.ema.update()
+                self.scheduler.step()
+                epoch_loss = epoch_loss / len(progress_bar)
+                log_string = f"Loss at epoch {epoch}: {epoch_loss :.4f}"
                 if self.best_loss > epoch_loss:
-                    unwrapped_model = self.accelerator.unwrap_model(model)
                     self.best_loss = epoch_loss
                     torch.save({
-                        "model_state_dict": unwrapped_model.state_dict(),
-                        "ema_model_state_dict": ema.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        "scheduler_state_dict": scheduler.state_dict(),
+                        "model_state_dict": self.accelerator.get_state_dict(self.model),
+                        "ema_model_state_dict": self.ema.state_dict(),
+                        "optimizer_state_dict": self.optimizer.state_dict(),
+                        "scheduler_state_dict": self.scheduler.state_dict(),
                         "epoch": epoch,
                         "training_step": epoch * len(dl),
                         "best_loss": self.best_loss,
@@ -76,4 +76,3 @@ class Trainer():
                         }, file_name + '_epoch' + str(epoch) + '.pth')
                     log_string += " --> Best model ever (stored)"
                 print(log_string)
-            self.accelerator.wait_for_everyone()
