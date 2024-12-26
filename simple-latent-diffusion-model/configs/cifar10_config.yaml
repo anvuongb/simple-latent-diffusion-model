@@ -1,7 +1,7 @@
 encoder:
     in_channels: 3
     resolution: 32
-    channels: 64
+    channels: 128
     channels_multipliers: [1, 2, 4]
     z_channels: 3
     num_res_blocks: 2
@@ -11,7 +11,7 @@ decoder:
     in_channels: 3
     out_channels: 3
     resolution: 32
-    channels: 64
+    channels: 128
     channels_multipliers: [1, 2, 4]
     z_channels: 6
     num_res_blocks: 2
@@ -19,6 +19,7 @@ decoder:
 
 vae:
     embed_dim: 3
+    kld_weight: 1e-7
 
 sampler:
     beta: 'linear'

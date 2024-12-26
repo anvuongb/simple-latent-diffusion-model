@@ -23,10 +23,13 @@ if __name__ == '__main__':
     data_generator = DataGenerator()
     data_loader = data_generator.cifar10(batch_size = 128)
     painter = Painter()
+    loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    trainer = Trainer(vae, loss_fn = vae.loss)
-    trainer.train(data_loader, 300, VAE_FILE_NAME, True)
+    loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
+    #vae, optimizer, scheduler, epoch, loss = loader.load_for_training('./auto_encoder/check_points/vae_epoch211', vae)
+    #trainer = Trainer(vae, loss_fn = vae.loss, optimizer=optimizer, start_epoch=epoch, scheduler=scheduler, best_loss=loss)
+    #trainer.train(data_loader, 500, VAE_FILE_NAME, True)
     
     sampler = DDIM(CONFIG_PATH)
     network = ConditionalUnetwork(CONFIG_PATH)

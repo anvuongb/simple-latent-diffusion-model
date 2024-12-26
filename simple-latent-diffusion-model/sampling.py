@@ -26,14 +26,18 @@ if __name__ == '__main__':
     loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    loader.load('./auto_encoder/check_points/embed3_epoch74', vae, ema=False)
+    loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
+    dat = next(iter(data_loader))[0][0:4]
+    painter.show_images(dat)
+    dat = vae(dat)[0]
+    painter.show_images(dat)
     
     sampler = DDIM(CONFIG_PATH)
     network = ConditionalUnetwork(CONFIG_PATH)
     dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
-    loader.load('./diffusion_model/check_points/ldm_epoch1', dm, ema=True)
+    loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
     
-    sample = dm(4, 12)
+    sample = dm(0, 12)
     painter.show_images(sample)
     
     

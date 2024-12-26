@@ -15,6 +15,7 @@ class VariationalAutoEncoder(nn.Module):
         self.add_module('encoder', Encoder(**config["encoder"]))
         self.add_module('decoder', Decoder(**config["decoder"]))
         self.embed_dim = config['vae']['embed_dim']
+        self.kld_weight = config['vae']['kld_weight']
         
         self.quant_conv = torch.nn.Conv2d(self.decoder.z_channels, 2*self.embed_dim, 1)
         self.post_quant_conv = torch.nn.Conv2d(self.embed_dim, self.decoder.z_channels, 1)
@@ -30,9 +31,9 @@ class VariationalAutoEncoder(nn.Module):
         dec = self.decoder(z)
         return dec
     
-    def loss(self, x, kld_weight = 1e-6):
+    def loss(self, x):
         x_hat, posterior = self(x)
-        return F.mse_loss(x, x_hat) + kld_weight * posterior.kl().mean() 
+        return F.mse_loss(x, x_hat) + self.kld_weight * posterior.kl().mean() 
 
     def forward(self, input, sample_posterior=True):
         posterior = self.encode(input)

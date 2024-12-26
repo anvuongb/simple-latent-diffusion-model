@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>19323f22-218b-42fe-a02a-5cc7ae6c0659</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>training.py</StartupFile>
+    <StartupFile>sampling.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
