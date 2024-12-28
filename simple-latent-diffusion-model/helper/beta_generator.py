@@ -1,3 +1,4 @@
+# https://github.com/lucidrains/denoising-diffusion-pytorch/blob/main/denoising_diffusion_pytorch/denoising_diffusion_pytorch.py#L442
 import torch
 import math
 
@@ -17,7 +18,6 @@ class BetaGenerator():
         beta_start = scale * 0.0001
         beta_end = scale * 0.02
         return torch.linspace(beta_start, beta_end, self.T)
-        #return torch.linspace(beta_start, beta_end, self.T, dtype = torch.float64)
 
     def cosine_beta_schedule(self, s = 0.008):
         """
