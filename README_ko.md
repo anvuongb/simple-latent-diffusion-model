@@ -6,6 +6,10 @@
 |---------------------------------------------|-----------------------------------------|
 | <img src="notebook/swiss_roll.gif" width="350"/>   | <img src="notebook/swiss_roll_image.png" width="350"/>  |
 
+## 튜토리얼
+
+- [Tutorial for Latent Diffusion Model](notebook/simple_latent_diffusion_model_tutorial.ipynb)
+
 ## 참고
 - [lucidrains/denoising-diffusion-pytorch](https://github.com/lucidrains/denoising-diffusion-pytorch)
 - [CompVis/latent-diffusion](https://github.com/CompVis/latent-diffusion)
