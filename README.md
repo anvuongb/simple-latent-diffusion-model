@@ -5,7 +5,7 @@
 This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
 | Latent                                      | Image                                   |
 |---------------------------------------------|-----------------------------------------|
-| <img src="notebook/swiss_roll.gif" width="300"/>   | <img src="notebook/swiss_roll_image.png" width="300"/>  |
+| <img src="notebook/swiss_roll.gif" width="400"/>   | <img src="notebook/swiss_roll_image.png" width="400"/>  |
 
 
 ## References
