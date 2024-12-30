@@ -3,9 +3,9 @@
 🌐 README in Korean: [KR 한국어 버전](README_ko.md)
 
 This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
-| Latent                                      | Image                                   |
+| Generation Process of Latents               | Generated Data                          |
 |---------------------------------------------|-----------------------------------------|
-| <img src="notebook/swiss_roll.gif" width="400"/>   | <img src="notebook/swiss_roll_image.png" width="400"/>  |
+| <img src="notebook/swiss_roll.gif" width="350"/>   | <img src="notebook/swiss_roll_image.png" width="350"/>  |
 
 
 ## References
