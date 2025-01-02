@@ -3,6 +3,13 @@
 🌐 README in Korean: [KR 한국어 버전](README_ko.md)
 
 This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
+| Generation Process of Latents               | Generated Data                          |
+|---------------------------------------------|-----------------------------------------|
+| <img src="notebook/swiss_roll.gif" width="350"/>   | <img src="notebook/swiss_roll_image.png" width="350"/>  |
+
+## Tutorials
+
+- [Tutorial for Latent Diffusion Model](notebook/simple_latent_diffusion_model_tutorial.ipynb)
 
 ## References
 - [lucidrains/denoising-diffusion-pytorch](https://github.com/lucidrains/denoising-diffusion-pytorch)

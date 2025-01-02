@@ -2,6 +2,14 @@
 
 이 저장소는 간단한 잠재 확산 모형(Latent Diffusion Model)의 구현을 제공합니다. 코드와 내용은 지속적으로 갱신될 예정입니다.
 
+| 잠재 변수의 생성 프로세스                  | 생성된 데이터                           |
+|---------------------------------------------|-----------------------------------------|
+| <img src="notebook/swiss_roll.gif" width="350"/>   | <img src="notebook/swiss_roll_image.png" width="350"/>  |
+
+## 튜토리얼
+
+- [Tutorial for Latent Diffusion Model](notebook/simple_latent_diffusion_model_tutorial.ipynb)
+
 ## 참고
 - [lucidrains/denoising-diffusion-pytorch](https://github.com/lucidrains/denoising-diffusion-pytorch)
 - [CompVis/latent-diffusion](https://github.com/CompVis/latent-diffusion)
