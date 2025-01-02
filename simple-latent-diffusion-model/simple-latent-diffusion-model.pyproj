@@ -37,11 +37,9 @@
     <Compile Include="helper\painter.py" />
     <Compile Include="helper\trainer.py" />
     <Compile Include="helper\util.py" />
-    <Compile Include="diffusion_model\models\cond_diffusion_model.py" />
     <Compile Include="diffusion_model\models\latent_diffusion_model.py" />
     <Compile Include="diffusion_model\models\uncond_diffusion_model.py" />
     <Compile Include="diffusion_model\network\attend.py" />
-    <Compile Include="diffusion_model\network\cond_u_net.py" />
     <Compile Include="diffusion_model\network\uncond_u_net.py" />
     <Compile Include="diffusion_model\network\u_net.py" />
     <Compile Include="diffusion_model\sampler\ddim.py" />

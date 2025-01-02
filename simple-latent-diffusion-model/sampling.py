@@ -7,7 +7,7 @@ from helper.painter import Painter
 from helper.trainer import Trainer
 from helper.loader import Loader
 from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-from diffusion_model.network.cond_u_net import ConditionalUnetwork
+from diffusion_model.network.uncond_u_net import UnconditionalUnetwork
 from diffusion_model.sampler.ddim import DDIM
 
 IMAGE_SHAPE = (3, 32, 32)
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     painter.show_images(dat)
     
     sampler = DDIM(CONFIG_PATH)
-    network = ConditionalUnetwork(CONFIG_PATH)
+    network = UnconditionalUnetwork(CONFIG_PATH)
     dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
     loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
     

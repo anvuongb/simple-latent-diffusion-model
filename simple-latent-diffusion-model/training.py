@@ -7,7 +7,7 @@ from helper.painter import Painter
 from helper.trainer import Trainer
 from helper.loader import Loader
 from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-from diffusion_model.network.cond_u_net import ConditionalUnetwork
+from diffusion_model.network.uncond_u_net import UnconditionalUnetwork
 from diffusion_model.sampler.ddim import DDIM
 
 IMAGE_SHAPE = (3, 32, 32)
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     #trainer.train(data_loader, 500, VAE_FILE_NAME, True)
     
     sampler = DDIM(CONFIG_PATH)
-    network = ConditionalUnetwork(CONFIG_PATH)
+    network = UnconditionalUnetwork(CONFIG_PATH)
     dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
     trainer = Trainer(dm, dm.loss)
-    trainer.train(data_loader, 300, DM_FILE_NAME, False)
+    trainer.train(data_loader, 300, DM_FILE_NAME, True)
