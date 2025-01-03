@@ -59,12 +59,20 @@ class DDIM(nn.Module):
         return x_prev
 
     @torch.no_grad()
-    def reverse_process(self, x_T, temperature, **kwargs):
+    def reverse_process(self, x_T, temperature = 1., only_last=True, **kwargs):
         x = x_T
+        if only_last == False:
+            x_seq = []
+            x_seq.append(x)
         for i, t in tqdm(enumerate(reversed(self.ddim_timesteps))):
             index = len(self.ddim_timesteps) - i - 1
             x = self.p_sample(x, t, index, temperature, **kwargs)
-        return x
+            if only_last == False:
+                x_seq.append(x)
+        if only_last:
+            return x
+        else:
+            return x_seq
     
     @torch.no_grad()
     def forward(self, x_T, temperature = 1., **kwargs):

@@ -27,3 +27,9 @@ class LatentDiffusionModel(UnconditionalDiffusionModel) :
         x_T = torch.randn(n_samples, *self.latent_shape, device = next(self.buffers(), None).device )
         sample = self.sampler(x_T = x_T)
         return self.auto_encoder.decode(sample)
+    
+    @torch.no_grad()
+    def generate_sequence(self, n_samples : int = 4):
+        x_T = torch.randn(n_samples, *self.latent_shape, device = next(self.buffers(), None).device )
+        sample_sequence = self.sampler.reverse_process(x_T, only_last=False)
+        return sample_sequence

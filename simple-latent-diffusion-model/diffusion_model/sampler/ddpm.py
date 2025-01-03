@@ -40,11 +40,19 @@ class DDPM(nn.Module):
         return sigma_t
 
     @torch.no_grad()
-    def reverse_process(self, x_T, **kwargs):
+    def reverse_process(self, x_T, only_last=False, **kwargs):
         x = x_T
+        if only_last == False:
+            x_seq = []
+            x_seq.append(x)
         for t in tqdm(reversed(self.timesteps)):
             x = self.p_sample(x, t, **kwargs)
-        return x
+            if only_last == False:
+                x_seq.append(x)
+        if only_last:
+            return x
+        else:
+            return x_seq
     
     @torch.no_grad()
     def forward(self, x_T, **kwargs):

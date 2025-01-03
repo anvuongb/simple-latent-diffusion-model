@@ -26,7 +26,7 @@ if __name__ == '__main__':
     loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
+    #loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
     #vae, optimizer, scheduler, epoch, loss = loader.load_for_training('./auto_encoder/check_points/vae_epoch211', vae)
     #trainer = Trainer(vae, loss_fn = vae.loss, optimizer=optimizer, start_epoch=epoch, scheduler=scheduler, best_loss=loss)
     #trainer.train(data_loader, 500, VAE_FILE_NAME, True)
