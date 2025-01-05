@@ -1,6 +1,23 @@
 from torchvision.datasets import CIFAR10, CelebA
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from torchvision.transforms import Compose, ToTensor, Lambda, CenterCrop, Resize
+import os
+from PIL import Image as im
+
+class UnlabelDataset(Dataset):
+    def __init__(self, path, transform):
+        self.path = path
+        self.file_list = os.listdir(path)
+        self.transform = transform
+        
+    def __len__(self) :
+        return len(self.file_list)
+
+    def __getitem__(self, index):
+        img_path = self.path + self.file_list[index]
+        image = im.open(img_path)
+        image = self.transform(image)
+        return image
 
 class DataGenerator():
     def __init__(self, ):

@@ -36,7 +36,7 @@ class Painter(object):
 
     def show_first_batch(self, loader):
         for batch in loader:
-            self.show_or_save_images(images = batch, title = "Images in the first batch")
+            self.show_images(images = batch, title = "First Batch")
             break
         
     def make_gif(self, images, file_name):
@@ -47,5 +47,5 @@ class Painter(object):
             plt.savefig(img_buf, format='png')
             imgs.append(im.open(img_buf))
         imgs[0].save(file_name + '.gif', format='GIF', append_images=imgs, save_all=True, duration=1, loop=0)
-            
+        plt.close('all')
             
