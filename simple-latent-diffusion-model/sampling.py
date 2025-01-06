@@ -26,7 +26,7 @@ if __name__ == '__main__':
     loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    #loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
+    loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
     dat = next(iter(data_loader))[0][0:4]
     painter.show_images(dat)
     dat = vae(dat)[0]
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     sampler = DDIM(CONFIG_PATH)
     network = UnconditionalUnetwork(CONFIG_PATH)
     dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
-    #loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
+    loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
     
     sample = dm.generate_sequence(4)
     painter.make_gif(sample, file_name='aa')
