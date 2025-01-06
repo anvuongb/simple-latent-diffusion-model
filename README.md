@@ -5,8 +5,8 @@
 This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
 | Dataset                                     | Generation Process of Latents           | Generated Data                          |
 |---------------------------------------------|-----------------------------------------|-----------------------------------------|
-| Swiss-roll  | <img src="assets/swiss_roll.gif" width="300" height: auto/>   | <img src="assets/swiss_roll_image.png" width="300" height: auto/>  |
-| CIFAR-10  | <img src="assets/cifar10.gif" width="300" height: auto/>   | <img src="assets/cifar10_image.png" width="300" height: auto/>  |
+| Swiss-roll  | <img src="assets/swiss_roll.gif" width="300"/>   | <img src="assets/swiss_roll_image.png" width="300"/>  |
+| CIFAR-10  | <img src="assets/cifar10.gif" width="300"/>   | <img src="assets/cifar10_image.png" width="300"/>  |
 
 ## Tutorials
 
