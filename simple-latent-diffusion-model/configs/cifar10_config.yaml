@@ -31,3 +31,5 @@ unet:
     dim: 224
     dim_mults: [1, 2, 3, 4]
     channels: 3
+    latent_dim: 3
+    text_dim: 128

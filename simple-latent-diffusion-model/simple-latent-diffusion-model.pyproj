@@ -30,6 +30,9 @@
     <Compile Include="clip\encoders\image_encoder.py" />
     <Compile Include="clip\encoders\text_encoder.py" />
     <Compile Include="clip\models\clip.py" />
+    <Compile Include="diffusion_model\models\clip_latent_diffusion_model.py" />
+    <Compile Include="diffusion_model\models\cond_diffusion_model.py" />
+    <Compile Include="diffusion_model\network\cond_u_net.py" />
     <Compile Include="helper\data_generator.py" />
     <Compile Include="auto_encoder\models\auto_encoder.py" />
     <Compile Include="auto_encoder\models\decoder.py" />

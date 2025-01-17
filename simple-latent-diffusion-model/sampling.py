@@ -1,10 +1,12 @@
 import torch
 from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
 import os
+from clip.models.clip import CLIP
+from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
+from diffusion_model.network.cond_u_net import ConditionalUnetwork
 
 from helper.data_generator import DataGenerator
 from helper.painter import Painter
-from helper.trainer import Trainer
 from helper.loader import Loader
 from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 from diffusion_model.network.uncond_u_net import UnconditionalUnetwork
@@ -26,18 +28,22 @@ if __name__ == '__main__':
     loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
-    dat = next(iter(data_loader))[0][0:4]
-    painter.show_images(dat)
-    dat = vae(dat)[0]
-    painter.show_images(dat)
+    #loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
+    #dat = next(iter(data_loader))[0][0:4]
+    #painter.show_images(dat)
+    #dat = vae(dat)[0]
+    #painter.show_images(dat)
+
+    clip = CLIP('./configs/composite_clip_config.yaml')
     
     sampler = DDIM(CONFIG_PATH)
-    network = UnconditionalUnetwork(CONFIG_PATH)
-    dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
-    loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
+    network = ConditionalUnetwork(CONFIG_PATH)
+    dm = CLIPLatentDiffusionModel(network, sampler, vae, clip, IMAGE_SHAPE)
+    #loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
     
-    sample = dm.generate_sequence(4)
-    painter.make_gif(sample, file_name='aa')
+    sample = dm(text = '안녕하세요?')
+    painter.show_images(sample)
+    #sample = dm.generate_sequence(4)
+    #painter.make_gif(sample, file_name='aa')
     
     

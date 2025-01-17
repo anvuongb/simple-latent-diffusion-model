@@ -2,6 +2,10 @@ import torch
 from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
 import os
 
+from clip.models.clip import CLIP
+from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
+from diffusion_model.network.cond_u_net import ConditionalUnetwork
+
 from helper.data_generator import DataGenerator
 from helper.painter import Painter
 from helper.trainer import Trainer
@@ -21,7 +25,8 @@ if __name__ == '__main__':
     print(f'using device : {device}\t'  + (f'{torch.cuda.get_device_name(0)}' if torch.cuda.is_available() else 'CPU' ))
     
     data_generator = DataGenerator()
-    data_loader = data_generator.cifar10(batch_size = 128)
+    #data_loader = data_generator.cifar10(batch_size = 128)
+    data_loader = data_generator.composite('./datasets/image/', './datasets/json/')
     painter = Painter()
     loader = Loader()
 
@@ -29,8 +34,10 @@ if __name__ == '__main__':
     trainer = Trainer(vae, loss_fn = vae.loss)
     trainer.train(data_loader, 1000, VAE_FILE_NAME, True)
     
+    clip = CLIP('./configs/composite_clip_config.yaml')
+    
     sampler = DDIM(CONFIG_PATH)
-    network = UnconditionalUnetwork(CONFIG_PATH)
-    dm = LatentDiffusionModel(network, sampler, vae, IMAGE_SHAPE)
+    network = ConditionalUnetwork(CONFIG_PATH)
+    dm = CLIPLatentDiffusionModel(network, sampler, vae, clip, IMAGE_SHAPE)
     trainer = Trainer(dm, dm.loss)
-    trainer.train(data_loader, 1000, DM_FILE_NAME, True)
+    trainer.train(data_loader, 100, DM_FILE_NAME, False)

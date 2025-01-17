@@ -47,6 +47,12 @@ class CLIP(nn.Module):
         
         return (loss_i2t + loss_t2i) / 2
     
+    def text_encode(self, text):
+        text_features = self.text_encoder(text)
+        if text_features.dim() < 2:
+            text_features = text_features.unsqueeze(0)
+        return text_features
+    
     def forward(self, image, text):
         image_features = self.image_encoder(image)
         text_features = self.text_encoder(text)
