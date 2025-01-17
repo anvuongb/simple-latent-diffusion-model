@@ -27,6 +27,9 @@
     <Compile Include="auto_encoder\components\normalize.py" />
     <Compile Include="auto_encoder\components\resnet_block.py" />
     <Compile Include="auto_encoder\components\sampling.py" />
+    <Compile Include="clip\encoders\image_encoder.py" />
+    <Compile Include="clip\encoders\text_encoder.py" />
+    <Compile Include="clip\models\clip.py" />
     <Compile Include="helper\data_generator.py" />
     <Compile Include="auto_encoder\models\auto_encoder.py" />
     <Compile Include="auto_encoder\models\decoder.py" />
@@ -35,6 +38,7 @@
     <Compile Include="helper\beta_generator.py" />
     <Compile Include="helper\loader.py" />
     <Compile Include="helper\painter.py" />
+    <Compile Include="helper\tokenizer.py" />
     <Compile Include="helper\trainer.py" />
     <Compile Include="helper\util.py" />
     <Compile Include="diffusion_model\models\latent_diffusion_model.py" />
@@ -46,16 +50,20 @@
     <Compile Include="diffusion_model\sampler\ddpm.py" />
     <Compile Include="sampling.py" />
     <Compile Include="training.py" />
+    <Compile Include="training_clip.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auto_encoder\" />
     <Folder Include="auto_encoder\components\" />
     <Folder Include="auto_encoder\models\" />
+    <Folder Include="clip\encoders\" />
+    <Folder Include="clip\models\" />
     <Folder Include="diffusion_model\" />
     <Folder Include="diffusion_model\models\" />
     <Folder Include="diffusion_model\network\" />
     <Folder Include="diffusion_model\sampler\" />
     <Folder Include="helper\" />
+    <Folder Include="clip\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="CondaEnv|CondaEnv|condatorch" />
