@@ -29,23 +29,23 @@ class CLIP(nn.Module):
                 nn.init.constant_(module.weight, 1)
                 nn.init.constant_(module.bias, 0)
                 
-    def loss(self, image, text, temperature=0.07): # contrastive loss
-        # Encoding
+    def loss(self, image, text):
         image_features, text_features = self(image, text)
 
         # Normalize features
         image_features = F.normalize(image_features, dim=1)
         text_features = F.normalize(text_features, dim=1)
-        
-        # Cosine similarity as logits
-        logits = torch.matmul(image_features, text_features.t()) / temperature
+
+        # Cosine similarity as logits with learned temperature
+        logits = torch.matmul(image_features, text_features.t()) * self.logit_scale.exp()
         labels = torch.arange(logits.shape[0], dtype=torch.long, device=logits.device)
 
-        # Cross-entropy loss for image-to-text and text-to-image
+        # Cross-entropy loss
         loss_i2t = F.cross_entropy(logits, labels)
         loss_t2i = F.cross_entropy(logits.t(), labels)
-        
+
         return (loss_i2t + loss_t2i) / 2
+
     
     def text_encode(self, text):
         text_features = self.text_encoder(text)

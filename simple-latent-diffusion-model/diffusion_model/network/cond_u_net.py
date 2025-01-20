@@ -42,6 +42,7 @@ class ConditionalUnetwork(nn.Module):
                 
         x = self.cross_attention(x, y)
         x = self.network(x, t)
-        x = self.cross_attention(x, y)
+        #x = self.cross_attention(x, y)
 
         return x
+    
