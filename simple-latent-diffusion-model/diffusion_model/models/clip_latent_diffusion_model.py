@@ -4,7 +4,6 @@ import torch.nn as nn
 from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
 from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 from clip.models.clip import CLIP
-from helper.tokenizer import Tokenizer
 
 class CLIPLatentDiffusionModel(LatentDiffusionModel) :
     def __init__(self, network : nn.Module, sampler : nn.Module, 
@@ -14,7 +13,6 @@ class CLIPLatentDiffusionModel(LatentDiffusionModel) :
         self.clip.eval()
         for param in self.clip.parameters():
             param.requires_grad = False
-        self.tokenizer = Tokenizer()
         
     def loss(self, x0, text):
         text = self.clip.text_encode(text)
@@ -27,8 +25,6 @@ class CLIPLatentDiffusionModel(LatentDiffusionModel) :
             
     @torch.no_grad()
     def forward(self, text, n_samples : int = 4):
-        if isinstance(text, str):
-            text = self.tokenizer.tokenize(text)
         text = self.clip.text_encode(text)
         text = text.repeat(n_samples, 1)
         x_T = torch.randn(n_samples, *self.latent_shape, device = next(self.buffers(), None).device )

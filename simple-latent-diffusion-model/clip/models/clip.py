@@ -6,6 +6,7 @@ import numpy as np
 
 from clip.encoders.image_encoder import ImageEncoder
 from clip.encoders.text_encoder import TextEncoder
+from helper.tokenizer import Tokenizer
 
 class CLIP(nn.Module):
     def __init__(self, config_path):
@@ -15,6 +16,7 @@ class CLIP(nn.Module):
            
         self.image_encoder = ImageEncoder(**config["image_encoder"])
         self.text_encoder = TextEncoder(**config["text_encoder"])
+        self.tokenizer = Tokenizer()
         self.logit_scale = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
         
         # initialize
@@ -46,9 +48,9 @@ class CLIP(nn.Module):
 
         return (loss_i2t + loss_t2i) / 2
 
-    
     def text_encode(self, text):
-        text_features = self.text_encoder(text)
+        tokens = self.tokenizer.tokenize(text)
+        text_features = self.text_encoder(tokens)
         if text_features.dim() < 2:
             text_features = text_features.unsqueeze(0)
         return text_features
