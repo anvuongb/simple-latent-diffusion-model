@@ -15,7 +15,7 @@ class CLIPLatentDiffusionModel(LatentDiffusionModel) :
             param.requires_grad = False
         
     def loss(self, x0, text):
-        text = self.clip.text_encode(text)
+        text = self.clip.text_encode(text, tokenize=False)
         x0 = self.auto_encoder.encode(x0).sample()
         eps = torch.randn_like(x0)
         t = torch.randint(0, self.T, (x0.size(0),), device = x0.device)

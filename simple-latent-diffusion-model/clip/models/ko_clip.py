@@ -13,7 +13,7 @@ class KoCLIPWrapper(nn.Module):
         self.model = AutoModel.from_pretrained(self.model_name)
         
     def loss(self, image, text):
-        image_features, text_features = self(image, text)
+        image_features, text_features = self(image, text, tokenize=False)
 
         # Normalize features
         image_features = F.normalize(image_features, dim=1)
@@ -29,11 +29,16 @@ class KoCLIPWrapper(nn.Module):
 
         return (loss_i2t + loss_t2i) / 2
 
-    def text_encode(self, text):
-        tokens = self.tokenizer(text, padding=True, truncation=True, return_tensors="pt")['input_ids']
+    def text_encode(self, text, tokenize):
+        if tokenize:
+            tokens = self.tokenizer(text, padding=True, truncation=True, return_tensors="pt")['input_ids']
+        else:
+            tokens = text
         return self.model.get_text_features(tokens)
     
-    def forward(self, image, text):
+    def forward(self, image, text, tokenize=True):
+        if tokenize==False:
+            text = self.tokenizer.decode(text, skip_special_tokens=True)
         inputs = self.processor(
             text=text,
             images=image, 

@@ -32,7 +32,7 @@ class CLIP(nn.Module):
                 nn.init.constant_(module.bias, 0)
                 
     def loss(self, image, text):
-        image_features, text_features = self(image, text)
+        image_features, text_features = self(image, text, tokenize=False)
 
         # Normalize features
         image_features = F.normalize(image_features, dim=1)
@@ -48,16 +48,19 @@ class CLIP(nn.Module):
 
         return (loss_i2t + loss_t2i) / 2
 
-    def text_encode(self, text):
-        tokens = self.tokenizer.tokenize(text)
+    def text_encode(self, text, tokenize=True):
+        if tokenize:
+            tokens = self.tokenizer.tokenize(text)
+        else:
+            tokens = text
         text_features = self.text_encoder(tokens)
         if text_features.dim() < 2:
             text_features = text_features.unsqueeze(0)
         return text_features
     
-    def forward(self, image, text):
+    def forward(self, image, text, tokenize=True):
         image_features = self.image_encoder(image)
-        text_features = self.text_encoder(text)
+        text_features = self.text_encoder(text, tokenize)
         
         if image_features.dim() < 2:
             image_features = image_features.unsqueeze(0)
