@@ -23,7 +23,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from network.u_net_attention import SpatialTransformer
+from diffusion_model.network.u_net_attention import SpatialTransformer
 import yaml
 
 class ConditionalUnetworkWrapper(nn.Module):
@@ -33,10 +33,10 @@ class ConditionalUnetworkWrapper(nn.Module):
             config = yaml.safe_load(file)['unet']
         self.add_module('network', UNetModel(**config))
         
-    def forward(self, x, t):
+    def forward(self, x, t, y):
         if t.dim() == 0:
             t = x.new_full((x.size(0), ), t, dtype = torch.int, device = x.device)
-        return self.network(x, t)
+        return self.network(x, t, y)
 
 class UNetModel(nn.Module):
     """

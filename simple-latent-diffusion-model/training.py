@@ -4,14 +4,14 @@ import os
 
 from clip.models.clip import CLIP
 from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
-from diffusion_model.network.cond_u_net import ConditionalUnetwork
+from diffusion_model.network.cond_u_net import ConditionalUnetworkWrapper
 
 from helper.data_generator import DataGenerator
 from helper.painter import Painter
 from helper.trainer import Trainer
 from helper.loader import Loader
 from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-from diffusion_model.network.uncond_u_net import UnconditionalUnetwork
+
 from diffusion_model.sampler.ddim import DDIM
 
 IMAGE_SHAPE = (3, 32, 32)
@@ -26,18 +26,18 @@ if __name__ == '__main__':
     
     data_generator = DataGenerator()
     #data_loader = data_generator.cifar10(batch_size = 128)
-    data_loader = data_generator.composite('./datasets/image/', './datasets/json/')
+    #data_loader = data_generator.composite('./datasets/image/', './datasets/json/')
     painter = Painter()
     loader = Loader()
 
     vae = VariationalAutoEncoder(CONFIG_PATH)
-    trainer = Trainer(vae, loss_fn = vae.loss)
-    trainer.train(data_loader, 1000, VAE_FILE_NAME, True)
+    #trainer = Trainer(vae, loss_fn = vae.loss)
+    #trainer.train(data_loader, 1000, VAE_FILE_NAME, True)
     
     clip = CLIP('./configs/composite_clip_config.yaml')
     
     sampler = DDIM(CONFIG_PATH)
-    network = ConditionalUnetwork(CONFIG_PATH)
+    network = ConditionalUnetworkWrapper(CONFIG_PATH)
     dm = CLIPLatentDiffusionModel(network, sampler, vae, clip, IMAGE_SHAPE)
     trainer = Trainer(dm, dm.loss)
-    trainer.train(data_loader, 100, DM_FILE_NAME, False)
+    #trainer.train(data_loader, 100, DM_FILE_NAME, False)
