@@ -30,3 +30,11 @@ class CLIPLatentDiffusionModel(LatentDiffusionModel) :
         x_T = torch.randn(n_samples, *self.latent_shape, device = next(self.buffers(), None).device )
         sample = self.sampler(x_T = x_T, y=text)
         return self.auto_encoder.decode(sample)
+
+    @torch.no_grad()
+    def generate_sequence(self, text, n_samples : int = 4):
+        text = self.clip.text_encode(text)
+        text = text.repeat(n_samples, 1)
+        x_T = torch.randn(n_samples, *self.latent_shape, device = next(self.buffers(), None).device )
+        sample_sequence = self.sampler.reverse_process(x_T, y = text, only_last=False)
+        return sample_sequence
