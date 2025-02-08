@@ -9,6 +9,20 @@ This repository contains a simplified implementation of a latent diffusion model
 | CIFAR-10  | <img src="assets/cifar10.gif" width="300"/>   | <img src="assets/cifar10_image.png" width="300"/>  |
 | CelebA  | <img src="assets/celeba.gif" width="300"/>   | <img src="assets/celeba_image.png" width="300"/>  |
 
+## Generate Composite with CLIP
+
+The following table shows text-to-image generation with CLIP. The dataset is [Asian Composite Dataset](https://aihub.or.kr/).
+
+| Text(Eng) | Text(Kor)      | Generation Process of Latents           | Generated Data                          |
+|---------------------------------------------|----|-----------------------------------------|-----------------------------------------|
+| A round face with voluminous, slightly long short hair, along with barely visible vocal cords, gives off a more feminine aura than a masculine one. The well-defined eyes and lips enhance the subject's delicate features, making them appear more refined and intellectual. | 동그란 얼굴에 풍성하고 살짝 긴 커트머리와 거의 나오지 않은 성대가 남성보다는 여성쪽의 분위기를 냅니다. 또렷한 눈과 입술이  인물의 섬세함을 더 증진시키고 지적이게 보이게 도와줍니다. | <img src="assets/swiss_roll.gif" width="300"/>   | <img src="assets/swiss_roll_image.png" width="300"/>  |
+| The hairstyle seems somewhat unpolished, lacking a sophisticated touch. The slightly upturned eyes give off a sharp and somewhat sensitive impression. Overall, they appear to have a slender physique and seem capable of handling tasks efficiently, but their social interactions might not be particularly smooth. | 헤어 손질은 좀 미숙하게 하여 세련되어 보이지는 않는다. 눈끝이 올라 가서 그런지 눈빛이 좀 날카롭고 예민해 보인다. 전체적으로 체격도 마른형일 것 같고 일처리는 잘할 것 같지만 교우관계는 그리 편할 것 같지는 않다. | <img src="assets/cifar10.gif" width="300"/>   | <img src="assets/cifar10_image.png" width="300"/>  |
+
+
+
+
+
+
 ## Tutorials
 
 - [Tutorial for Latent Diffusion Model](notebook/simple_latent_diffusion_model_tutorial.ipynb)
