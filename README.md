@@ -13,10 +13,10 @@ This repository contains a simplified implementation of a latent diffusion model
 
 The table below showcases text-to-image generation using CLIP. The dataset used is the [Asian Composite Dataset](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=618), with input text in Korean.
 
-| **English Text** | **Korean Text** | **Generated Image** |
-|-----------------|----------------|------------------------------|
-| A round face with voluminous, slightly long short hair, along with barely visible vocal cords, gives off a more feminine aura than a masculine one. The well-defined eyes and lips enhance the subject's delicate features, making them appear more refined and intellectual. | 동그란 얼굴에 풍성하고 살짝 긴 커트머리와 거의 나오지 않은 성대가 남성보다는 여성적인 분위기를 냅니다. 또렷한 눈과 입술이 인물의 섬세함을 더욱 부각시키고 지적으로 보이게 만듭니다. | <img src="assets/Ex1.png" width="1000"/> |
-| The hairstyle appears slightly unpolished, lacking a refined touch. The slightly upturned eyes give off a sharp and somewhat sensitive impression. Overall, they seem to have a slender physique and appear efficient in handling tasks, though their social interactions may not be particularly smooth. | 헤어 손질이 다소 미숙하여 세련된 느낌이 부족하다. 눈 끝이 올라가 있어 눈빛이 날카롭고 예민해 보인다. 전체적으로 마른 체격일 것으로 보이며, 업무 처리 능력은 뛰어나겠지만, 교우 관계는 원만하지 않을 수도 있다. | <img src="assets/Ex4.png" width="1000"/> | 
+| **English Text** | **Generated Image** |
+|-----------------|------------------------------|
+| A round face with voluminous, slightly long short hair, along with barely visible vocal cords, gives off a more feminine aura than a masculine one. The well-defined eyes and lips enhance the subject's delicate features, making them appear more refined and intellectual. | <img src="assets/Ex1.png" width="1000"/> |
+| The hairstyle appears slightly unpolished, lacking a refined touch. The slightly upturned eyes give off a sharp and somewhat sensitive impression. Overall, they seem to have a slender physique and appear efficient in handling tasks, though their social interactions may not be particularly smooth. | <img src="assets/Ex4.png" width="1000"/> | 
 
 ### Why doesn't the generated image match the input text?
 
