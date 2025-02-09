@@ -11,7 +11,7 @@ This repository contains a simplified implementation of a latent diffusion model
 
 ## **Generate Composites with CLIP**
 
-The table below showcases text-to-image generation using CLIP. The dataset used is the Asian Composite Dataset, with input text in Korean.
+The table below showcases text-to-image generation using CLIP. The dataset used is the [Asian Composite Dataset](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=618), with input text in Korean.
 
 | **English Text** | **Korean Text** | **Generated Image** |
 |-----------------|----------------|------------------------------|
