@@ -8,6 +8,19 @@
 | CIFAR-10  | <img src="assets/cifar10.gif" width="300"/>   | <img src="assets/cifar10_image.png" width="300"/>  |
 | CelebA  | <img src="assets/celeba.gif" width="300"/>   | <img src="assets/celeba_image.png" width="300"/>  |
 
+## CLIP을 이용한 text-to-image 생성
+
+아래 테이블은 CLIP을 이용한 text-to-image 결과를 나타냅니다. 데이터 세트는 [페르소나 기반의 가상 몽타주 데이터](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=618)입니다.
+
+| **입력 텍스트** | **생성된 이미지** |
+|----------------|------------------------------|
+|동그란 얼굴에 풍성하고 살짝 긴 커트머리와 거의 나오지 않은 성대가 남성보다는 여성적인 분위기를 냅니다. 또렷한 눈과 입술이 인물의 섬세함을 더욱 부각시키고 지적으로 보이게 만듭니다. | <img src="assets/Ex1.png" width="600"/> |
+|헤어 손질이 다소 미숙하여 세련된 느낌이 부족하다. 눈 끝이 올라가 있어 눈빛이 날카롭고 예민해 보인다. 전체적으로 마른 체격일 것으로 보이며, 업무 처리 능력은 뛰어나겠지만, 교우 관계는 원만하지 않을 수도 있다. | <img src="assets/Ex4.png" width="600"/> | 
+
+### 왜 입력 텍스트와 이미지가 잘 맞지 않는가?
+
+이는 guidance 없이 데이터를 생성했기 때문입니다. Classifier-free guidance (CFG)를 이용하면 생성 데이터의 품질과 조건부 생성의 성능을 향상시킬 수 있습니다.
+
 ## 튜토리얼
 
 - [Tutorial for Latent Diffusion Model](notebook/simple_latent_diffusion_model_tutorial.ipynb)
