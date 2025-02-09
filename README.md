@@ -2,14 +2,15 @@
 
 🌐 README in Korean: [KR 한국어 버전](README_ko.md)
 
-This repository contains a simplified implementation of a latent diffusion model. The code and contents will be updated continuously.
+This repository provides a lightweight and modular implementation of a Latent Diffusion Model (LDM), which performs efficient image generation by operating in a lower-dimensional latent space instead of pixel space.
+
 | **Dataset**                                     | **Generation Process of Latents**           | **Generated Data**                          |
 |---------------------------------------------|-----------------------------------------|-----------------------------------------|
 | Swiss-roll  | <img src="assets/swiss_roll.gif" width="300"/>   | <img src="assets/swiss_roll_image.png" width="300"/>  |
 | CIFAR-10  | <img src="assets/cifar10.gif" width="300"/>   | <img src="assets/cifar10_image.png" width="300"/>  |
 | CelebA  | <img src="assets/celeba.gif" width="300"/>   | <img src="assets/celeba_image.png" width="300"/>  |
 
-## **Generate Composites with CLIP**
+## **Text-to-image synthesis using CLIP-guided latent diffusion.**
 
 The table below showcases text-to-image generation using CLIP. The dataset used is the [Asian Composite Dataset](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=618), with input text in Korean.
 
