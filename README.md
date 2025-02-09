@@ -73,7 +73,6 @@ ldm = LatentDiffusionModel(network, sampler, vae, image_shape=(3, 32, 32))  # Re
 loader.model_load('./diffusion_model/check_points/ldm_epoch1000', ldm, ema=True)  # Load the trained model
 sample = ldm(n_samples=4)  # Generate 4 sample images
 painter.show_images(sample)  # Display the generated images
-
 ```
 
 
