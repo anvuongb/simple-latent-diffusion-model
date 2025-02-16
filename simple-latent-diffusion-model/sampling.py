@@ -20,7 +20,10 @@ DM_FILE_NAME = './diffusion_model/check_points/ldm'
 if __name__ == '__main__':
     os.environ['KMP_DUPLICATE_LIB_OK']='True'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f'using device : {device}\t'  + (f'{torch.cuda.get_device_name(0)}' if torch.cuda.is_available() else 'CPU' ))
+    
+
+    print(f'using device : {device}\t' + (f'{torch.cuda.get_device_name(0)}' if torch.cuda.is_available() else 'CPU' ))
+    
     
     data_generator = DataGenerator()
     data_loader = data_generator.cifar10(batch_size = 128)

@@ -6,7 +6,6 @@ import yaml
 from helper.util import extract
 from helper.beta_generator import BetaGenerator
 
-
 class DDPM(nn.Module):
     def __init__(self, config_path):
         super(DDPM, self).__init__()
@@ -42,17 +41,16 @@ class DDPM(nn.Module):
     @torch.no_grad()
     def reverse_process(self, x_T, only_last=False, **kwargs):
         x = x_T
-        if only_last == False:
-            x_seq = []
-            x_seq.append(x)
-        for t in tqdm(reversed(self.timesteps)):
-            x = self.p_sample(x, t, **kwargs)
-            if only_last == False:
-                x_seq.append(x)
         if only_last:
+            for t in tqdm(reversed(self.timesteps)):
+                x = self.p_sample(x, t, **kwargs)
             return x
         else:
-            return x_seq
+            x_seq = []
+            x_seq.append(x)
+            for t in tqdm(reversed(self.timesteps)):
+                x_seq.append(self.p_sample(x_seq[-1], t, **kwargs))
+            return x_seq    
     
     @torch.no_grad()
     def forward(self, x_T, **kwargs):
