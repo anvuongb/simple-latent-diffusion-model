@@ -2,6 +2,7 @@ from torchvision.datasets import CIFAR10, CelebA
 from torch.utils.data import DataLoader, Dataset
 from torchvision.transforms import Compose, ToTensor, Lambda, CenterCrop, Resize
 import os
+import torch
 import json
 from PIL import Image as im
 from helper.tokenizer import Tokenizer
@@ -78,4 +79,8 @@ class DataGenerator():
     
     def composite(self, path, text_path, batch_size : int = 16):
         return DataLoader(CompositeDataset(path, text_path), batch_size=batch_size)
+
+    def random_data(self, size, batch_size : int = 4):
+        train_data = torch.randn(size)
+        return DataLoader(train_data, batch_size)
         

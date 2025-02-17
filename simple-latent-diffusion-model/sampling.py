@@ -1,52 +1,37 @@
 import torch
-from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
+#from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
 import os
-from clip.models.clip import CLIP
-from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
-from diffusion_model.network.cond_u_net import ConditionalUnetwork
+#from clip.models.clip import CLIP
+#from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
+#from diffusion_model.network.cond_u_net import ConditionalUnetwork
 
+from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
 from helper.data_generator import DataGenerator
 from helper.painter import Painter
 from helper.loader import Loader
-from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-from diffusion_model.network.uncond_u_net import UnconditionalUnetwork
+#from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
+from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
 from diffusion_model.sampler.ddim import DDIM
 
 IMAGE_SHAPE = (3, 32, 32)
 CONFIG_PATH = './configs/cifar10_config.yaml'
-VAE_FILE_NAME = './auto_encoder/check_points/vae'
-DM_FILE_NAME = './diffusion_model/check_points/ldm'
 
 if __name__ == '__main__':
     os.environ['KMP_DUPLICATE_LIB_OK']='True'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-
     print(f'using device : {device}\t' + (f'{torch.cuda.get_device_name(0)}' if torch.cuda.is_available() else 'CPU' ))
     
-    
     data_generator = DataGenerator()
-    data_loader = data_generator.cifar10(batch_size = 128)
+    data_loader = data_generator.random_data(size = (16, 3, 32, 32))
     painter = Painter()
     loader = Loader()
-
-    vae = VariationalAutoEncoder(CONFIG_PATH)
-    #loader.model_load('./auto_encoder/check_points/vae_epoch336', vae, ema=True)
-    #dat = next(iter(data_loader))[0][0:4]
-    #painter.show_images(dat)
-    #dat = vae(dat)[0]
-    #painter.show_images(dat)
-
-    clip = CLIP('./configs/composite_clip_config.yaml')
     
     sampler = DDIM(CONFIG_PATH)
-    network = ConditionalUnetwork(CONFIG_PATH)
-    dm = CLIPLatentDiffusionModel(network, sampler, vae, clip, IMAGE_SHAPE)
-    #loader.model_load('./diffusion_model/check_points/ldm_epoch300', dm, ema=True)
+    network = UnconditionalUnetworkWrapper(CONFIG_PATH)
+    dm = UnconditionalDiffusionModel(network, sampler, IMAGE_SHAPE)
     
-    sample = dm(text = '안녕하세요?')
+    sample = dm()
     painter.show_images(sample)
-    #sample = dm.generate_sequence(4)
-    #painter.make_gif(sample, file_name='aa')
     
     
