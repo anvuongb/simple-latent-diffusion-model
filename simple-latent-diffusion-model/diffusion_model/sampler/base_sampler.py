@@ -13,23 +13,28 @@ class BaseSampler(nn.Module, ABC):
         with open(config_path, "r") as file:
             self.config = yaml.safe_load(file)['sampler']
         self.T = self.config['T']
+        self.sampling_T = self.config['sampling_T']
         beta_generator = BetaGenerator(T=self.T)
         
-        self.register_buffer('timesteps', torch.linspace(0, 999, steps = 1000, dtype = torch.int))
-        self.register_buffer('betas', getattr(beta_generator,
+        step = self.T // self.sampling_T
+        self.register_buffer('timesteps', 
+                             torch.arange(0, self.T, step, dtype=torch.int))
+        self.register_buffer('beta', getattr(beta_generator,
                                               f"{self.config['beta']}_beta_schedule",
                                               beta_generator.linear_beta_schedule)())
-        self.register_buffer('alphas', 1 - self.betas)
-        self.register_buffer('alpha_bars', torch.cumprod(self.alphas, dim = 0))
+
+        self.register_buffer('alpha', 1 - self.beta)
+        self.register_buffer('alpha_sqrt', self.alpha.sqrt())
+        self.register_buffer('alpha_bar', torch.cumprod(self.alpha, dim = 0))
+        self.alpha_bar = self.alpha_bar[self.timesteps]
+        self.register_buffer('sqrt_one_minus_alpha_bar', (1. - self.alpha_bar).sqrt())
+        self.register_buffer('alpha_bar_prev',
+                             torch.cat([self.alpha_bar[0:1], self.alpha_bar[self.timesteps[:-1]]]))
+        self.register_buffer('sigma' , None) # should be implemented in the derived class
 
     @abstractmethod
     @torch.no_grad()
-    def get_x_prev(self, x, t, index, eps_hat):
-        pass
-
-    @abstractmethod
-    @torch.no_grad()
-    def sigma_t(self, t):
+    def get_x_prev(self, x, t, idx, eps_hat):
         pass
         
     def set_network(self, network : nn.Module):
@@ -47,21 +52,21 @@ class BaseSampler(nn.Module, ABC):
         x = x_T
         if only_last:
             for i, t in tqdm(enumerate(reversed(self.timesteps))):
-                index = len(self.timesteps) - i - 1
-                x = self.p_sample(x, t, index, **kwargs)
+                idx = len(self.timesteps) - i - 1
+                x = self.p_sample(x, t, idx, **kwargs)
             return x
         else:
             x_seq = []
             x_seq.append(x)
             for i, t in tqdm(enumerate(reversed(self.timesteps))):
-                index = len(self.timesteps) - i - 1
-                x_seq.append(self.p_sample(x_seq[-1], t, index, **kwargs))
+                idx = len(self.timesteps) - i - 1
+                x_seq.append(self.p_sample(x_seq[-1], t, idx, **kwargs))
             return x_seq
         
     @torch.no_grad()
-    def p_sample(self, x, t, index, **kwargs):
+    def p_sample(self, x, t, idx, **kwargs):
         eps_hat = self.network(x = x, t = t, **kwargs)
-        x = self.get_x_prev(x, t, index, eps_hat)
+        x = self.get_x_prev(x, idx, eps_hat)
         return x
 
     @torch.no_grad()
