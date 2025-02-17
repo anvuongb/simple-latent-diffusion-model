@@ -8,7 +8,6 @@ import os
 from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
 from helper.data_generator import DataGenerator
 from helper.painter import Painter
-from helper.loader import Loader
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
 from diffusion_model.sampler.ddim import DDIM
@@ -25,7 +24,6 @@ if __name__ == '__main__':
     data_generator = DataGenerator()
     data_loader = data_generator.random_data(size = (16, 3, 32, 32))
     painter = Painter()
-    loader = Loader()
     
     sampler = DDIM(CONFIG_PATH)
     network = UnconditionalUnetworkWrapper(CONFIG_PATH)
