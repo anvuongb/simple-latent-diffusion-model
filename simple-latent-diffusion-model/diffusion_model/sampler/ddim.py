@@ -4,7 +4,7 @@ from diffusion_model.sampler.base_sampler import BaseSampler
 
 class DDIM(BaseSampler):
     def __init__(self, config_path):
-        super(config_path).__init__()
+        super().__init__(config_path)
         self.sigma = (self.config['eta'] * 
                             torch.sqrt((1-self.alpha_bar_prev) / (1-self.alpha_bar) *
                             (1 - self.alpha_bar / self.alpha_bar_prev)))
