@@ -48,7 +48,7 @@ class BaseSampler(nn.Module, ABC):
         return q_xt_x0
 
     @torch.no_grad()
-    def reverse_process(self, x_T, only_last=False, **kwargs):
+    def reverse_process(self, x_T, only_last=True, **kwargs):
         x = x_T
         if only_last:
             for i, t in tqdm(enumerate(reversed(self.timesteps))):
