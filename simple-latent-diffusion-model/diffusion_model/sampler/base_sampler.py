@@ -28,8 +28,8 @@ class BaseSampler(nn.Module, ABC):
         self.register_buffer('alpha_bar', torch.cumprod(self.alpha, dim = 0))
         self.alpha_bar = self.alpha_bar[self.timesteps]
         self.register_buffer('sqrt_one_minus_alpha_bar', (1. - self.alpha_bar).sqrt())
-        self.register_buffer('alpha_bar_prev',
-                             torch.cat([self.alpha_bar[0:1], self.alpha_bar[self.timesteps[:-1]]]))
+        self.register_buffer('alpha_bar_prev', 
+                             torch.cat([self.alpha_bar[0:1], self.alpha_bar[:-1]]))
         self.register_buffer('sigma' , None) # should be implemented in the derived class
 
     @abstractmethod
