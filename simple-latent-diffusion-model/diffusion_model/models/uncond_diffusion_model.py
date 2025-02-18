@@ -11,8 +11,8 @@ class UnconditionalDiffusionModel(nn.Module) :
         self.sampler.set_network(network)
         self.T = sampler.T
         self.image_shape = image_shape
-        alpha_bars = self.sampler.alpha_bars
-        snr = alpha_bars / (1 - alpha_bars)
+        alpha_bar = self.sampler.alpha_bar
+        snr = alpha_bar / (1 - alpha_bar)
         maybe_clipped_snr = snr.clone()
         maybe_clipped_snr.clamp_(max = 5)
         self.register_buffer('loss_weight', maybe_clipped_snr / snr)
