@@ -34,6 +34,7 @@
     <Compile Include="diffusion_model\models\clip_latent_diffusion_model.py" />
     <Compile Include="diffusion_model\models\cond_diffusion_model.py" />
     <Compile Include="diffusion_model\models\diffusion_model.py" />
+    <Compile Include="diffusion_model\network\attention.py" />
     <Compile Include="diffusion_model\network\base_unet.py" />
     <Compile Include="diffusion_model\network\cross_attn_u_net.py" />
     <Compile Include="diffusion_model\network\cond_u_net.py" />
