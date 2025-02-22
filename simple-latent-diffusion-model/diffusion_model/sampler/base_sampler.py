@@ -13,12 +13,8 @@ class BaseSampler(nn.Module, ABC):
         with open(config_path, "r") as file:
             self.config = yaml.safe_load(file)['sampler']
         self.T = self.config['T']
-        self.sampling_T = self.config['sampling_T']
         beta_generator = BetaGenerator(T=self.T)
-        
-        step = self.T // self.sampling_T
-        self.register_buffer('timesteps', 
-                             torch.arange(0, self.T, step, dtype=torch.int))
+
         self.register_buffer('beta', getattr(beta_generator,
                                               f"{self.config['beta']}_beta_schedule",
                                               beta_generator.linear_beta_schedule)())
@@ -26,10 +22,9 @@ class BaseSampler(nn.Module, ABC):
         self.register_buffer('alpha', 1 - self.beta)
         self.register_buffer('alpha_sqrt', self.alpha.sqrt())
         self.register_buffer('alpha_bar', torch.cumprod(self.alpha, dim = 0))
-        self.alpha_bar = self.alpha_bar[self.timesteps]
-        self.register_buffer('sqrt_one_minus_alpha_bar', (1. - self.alpha_bar).sqrt())
-        self.register_buffer('alpha_bar_prev', 
-                             torch.cat([self.alpha_bar[0:1], self.alpha_bar[:-1]]))
+        self.register_buffer('ddim_alpha', self.alpha_bar[self.timesteps]) # Equals to alpha_bar for DDPM
+        self.register_buffer('sqrt_one_minus_alpha_bar', None)
+        self.register_buffer('alpha_bar_prev', None)
         self.register_buffer('sigma' , None) # should be implemented in the derived class
 
     @abstractmethod
