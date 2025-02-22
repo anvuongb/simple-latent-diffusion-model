@@ -8,16 +8,16 @@ from auto_encoder.components.sampling import Upsample
 from auto_encoder.components.nonlinearity import nonlinearity
 
 class Decoder(nn.Module):
-    def __init__(self, *, in_channels, out_channels, resolution, channels, channels_multipliers = (1, 2, 4, 8), z_channels, num_res_blocks,
+    def __init__(self, *, in_channels, out_channels, resolution, channels, channel_multipliers = (1, 2, 4, 8), z_channels, num_res_blocks,
                  dropout = 0.0, resample_with_conv : bool = True):
         super().__init__()
         self.ch = channels
-        self.num_resolutions = len(channels_multipliers)
+        self.num_resolutions = len(channel_multipliers)
         self.num_res_blocks = num_res_blocks
         self.in_channels = in_channels
         self.z_channels = z_channels
         
-        in_ch_mult = (1 , ) + tuple(channels_multipliers)
+        in_ch_mult = (1 , ) + tuple(channel_multipliers)
         block_in = self.ch * in_ch_mult[self.num_resolutions - 1]
         curr_res = resolution // 2 ** (self.num_resolutions - 1)
         self.z_shape = (1 , z_channels, curr_res, curr_res)
@@ -36,7 +36,7 @@ class Decoder(nn.Module):
         self.up = nn.ModuleList()
         for i_level in reversed(range(self.num_resolutions)):
             block = nn.ModuleList()
-            block_out = self.ch * channels_multipliers[i_level]
+            block_out = self.ch * channel_multipliers[i_level]
             for i_block in range(self.num_res_blocks + 1):
                 block.append(ResnetBlock(in_channels = block_in, out_channels = block_out,
                                          dropout = dropout))

@@ -2,7 +2,7 @@ encoder:
     in_channels: 3
     resolution: 32
     channels: 128
-    channels_multipliers: [1, 2,]
+    channel_multipliers: [1, 2,]
     z_channels: 3
     num_res_blocks: 2
     dropout: 0.0
@@ -12,7 +12,7 @@ decoder:
     out_channels: 3
     resolution: 32
     channels: 128
-    channels_multipliers: [1, 2,]
+    channel_multipliers: [1, 2,]
     z_channels: 6
     num_res_blocks: 2
     dropout: 0.0
@@ -29,4 +29,4 @@ sampler:
 
 unet:
     channels: 64
-    channel_mults : [1, 2, 4]
+    channel_multipliers : [1, 2, 4]

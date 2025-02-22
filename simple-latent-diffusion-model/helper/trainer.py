@@ -4,7 +4,6 @@ from torch.utils.data import DataLoader
 from accelerate import Accelerator
 from tqdm import tqdm
 from typing import Callable
-from ema_pytorch import EMA
 
 class Trainer():
     def __init__(self,
@@ -25,7 +24,6 @@ class Trainer():
         self.accelerator = Accelerator(mixed_precision = 'no')
         self.start_epoch = start_epoch
         self.best_loss = best_loss
-        self.ema = EMA(model).to(self.accelerator.device)
             
     def train(self, dl : DataLoader, epochs : int, file_name : str, no_label : bool = False):
         self.model.train()
@@ -57,7 +55,6 @@ class Trainer():
                 
             self.accelerator.wait_for_everyone()
             if self.accelerator.is_main_process:
-                self.ema.update()
                 self.scheduler.step()
                 epoch_loss = epoch_loss / len(progress_bar)
                 log_string = f"Loss at epoch {epoch}: {epoch_loss :.4f}"
@@ -65,7 +62,6 @@ class Trainer():
                     self.best_loss = epoch_loss
                     torch.save({
                         "model_state_dict": self.accelerator.get_state_dict(self.model),
-                        "ema_model_state_dict": self.ema.state_dict(),
                         "optimizer_state_dict": self.optimizer.state_dict(),
                         "scheduler_state_dict": self.scheduler.state_dict(),
                         "epoch": epoch,

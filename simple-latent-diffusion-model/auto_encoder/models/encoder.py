@@ -8,11 +8,11 @@ from auto_encoder.components.sampling import Downsample
 from auto_encoder.components.nonlinearity import nonlinearity
 
 class Encoder(nn.Module):
-    def __init__(self, *, in_channels, resolution, channels, channels_multipliers = (1, 2, 4, 8), z_channels, num_res_blocks,
+    def __init__(self, *, in_channels, resolution, channels, channel_multipliers = (1, 2, 4, 8), z_channels, num_res_blocks,
                  dropout = 0.0, resample_with_conv : bool = True, double_z : bool = True):
         super().__init__()
         self.ch = channels
-        self.num_resolutions = len(channels_multipliers)
+        self.num_resolutions = len(channel_multipliers)
         self.num_res_blocks = num_res_blocks
         self.in_channels = in_channels
         self.z_channels = z_channels
@@ -20,13 +20,13 @@ class Encoder(nn.Module):
         # downsampling
         self.conv_in = torch.nn.Conv2d(in_channels, self.ch, kernel_size = 3, stride = 1, padding = 1)
         curr_res = resolution
-        in_ch_mult = (1, ) + tuple(channels_multipliers)
+        in_ch_mult = (1, ) + tuple(channel_multipliers)
         self.in_ch_mult = in_ch_mult
         self.down = nn.ModuleList()
         for i_level in range(self.num_resolutions):
             block = nn.ModuleList()
             block_in = self.ch * in_ch_mult[i_level]
-            block_out = self.ch * channels_multipliers[i_level]
+            block_out = self.ch * channel_multipliers[i_level]
             for i_block in range(self.num_res_blocks):
                 block.append(ResnetBlock(in_channels = block_in, out_channels = block_out, dropout = dropout))
                 block_in = block_out
