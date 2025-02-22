@@ -41,7 +41,7 @@ class BaseSampler(nn.Module, ABC):
         self.network = network
         
     def q_sample(self, x0, t, eps = None):
-        alpha_t_bar = extract(self.alpha_bars, t, x0.shape)
+        alpha_t_bar = extract(self.alpha_bar, t, x0.shape)
         if eps is None:
             eps = torch.randn_like(x0)
         q_xt_x0 = alpha_t_bar.sqrt() * x0 + (1 - alpha_t_bar).sqrt() * eps
