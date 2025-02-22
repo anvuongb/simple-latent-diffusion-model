@@ -7,8 +7,7 @@ class DDIM(BaseSampler):
         super().__init__(config_path)
         self.sampling_T = self.config['sampling_T']
         step = self.T // self.sampling_T
-        self.register_buffer('timesteps', 
-                             torch.arange(0, self.T, step, dtype=torch.int))
+        self.timesteps = torch.arange(0, self.T, step, dtype=torch.int)
         self.register_buffer('sqrt_one_minus_alpha_bar', (1. - self.ddim_alpha).sqrt())
         self.register_buffer('alpha_bar_prev', 
                              torch.cat([self.ddim_alpha[0:1], self.ddim_alpha[:-1]]))

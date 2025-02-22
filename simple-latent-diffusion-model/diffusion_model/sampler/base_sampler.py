@@ -15,6 +15,7 @@ class BaseSampler(nn.Module, ABC):
         self.T = self.config['T']
         beta_generator = BetaGenerator(T=self.T)
 
+        self.register_buffer('timesteps', None)
         self.register_buffer('beta', getattr(beta_generator,
                                               f"{self.config['beta']}_beta_schedule",
                                               beta_generator.linear_beta_schedule)())
