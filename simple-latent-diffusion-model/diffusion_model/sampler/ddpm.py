@@ -6,7 +6,7 @@ class DDPM(BaseSampler):
     def __init__(self, config_path):
         super().__init__(config_path)
         step = self.T
-        self.timesteps = torch.arange(0, self.T, step, dtype=torch.int)
+        self.timesteps = torch.arange(0, self.T, dtype=torch.int)
         self.sqrt_one_minus_alpha_bar = (1. - self.alpha_bar).sqrt()
         self.alpha_bar_prev = torch.cat([self.alpha_bar[0:1], self.alpha_bar[:-1]])
         self.sigma = (((1 - self.alpha_bar_prev) / (1 - self.alpha_bar)) * self.beta).sqrt()
