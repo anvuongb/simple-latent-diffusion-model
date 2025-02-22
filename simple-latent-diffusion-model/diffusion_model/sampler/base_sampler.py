@@ -14,8 +14,8 @@ class BaseSampler(nn.Module, ABC):
             self.config = yaml.safe_load(file)['sampler']
         self.T = self.config['T']
         beta_generator = BetaGenerator(T=self.T)
+        self.timesteps = None
 
-        self.register_buffer('timesteps', None)
         self.register_buffer('beta', getattr(beta_generator,
                                               f"{self.config['beta']}_beta_schedule",
                                               beta_generator.linear_beta_schedule)())
@@ -23,10 +23,6 @@ class BaseSampler(nn.Module, ABC):
         self.register_buffer('alpha', 1 - self.beta)
         self.register_buffer('alpha_sqrt', self.alpha.sqrt())
         self.register_buffer('alpha_bar', torch.cumprod(self.alpha, dim = 0))
-        self.register_buffer('ddim_alpha', None) # Equals to alpha_bar for DDPM
-        self.register_buffer('sqrt_one_minus_alpha_bar', None)
-        self.register_buffer('alpha_bar_prev', None)
-        self.register_buffer('sigma' , None) # should be implemented in the derived class
 
     @abstractmethod
     @torch.no_grad()
