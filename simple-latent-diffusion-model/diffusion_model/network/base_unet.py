@@ -139,7 +139,7 @@ class BaseUnet(nn.Module):
         self.out_channels = out_channels
         self.channels = channels
         
-        self.init_conv = nn.Conv2d(self.channels, self.dim, 7, padding = 3)
+        self.init_conv = nn.Conv2d(self.in_channels, self.channels, 7, padding = 3)
 
         channels_list = [channels * m for m in channel_mults]
 
