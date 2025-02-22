@@ -36,6 +36,7 @@
     <Compile Include="diffusion_model\models\diffusion_model.py" />
     <Compile Include="diffusion_model\network\cond_unet.py" />
     <Compile Include="diffusion_model\network\unet_attention.py" />
+    <Compile Include="diffusion_model\network\unet_wrapper.py" />
     <Compile Include="diffusion_model\sampler\base_sampler.py" />
     <Compile Include="helper\data_generator.py" />
     <Compile Include="auto_encoder\models\auto_encoder.py" />

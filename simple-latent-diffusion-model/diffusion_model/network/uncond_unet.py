@@ -15,7 +15,7 @@ class UnconditionalUnetworkWrapper(nn.Module):
         super().__init__()
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)['unet']
-        self.add_module('network', Unet(dim=config['dim'], dim_mults=config['dim_mults'], channels=config['channels']))
+        self.add_module('network', Unet(channels=config['dim'], channel_multipliers=config['dim_mults'], in_channels=config['channels']))
         
     def forward(self, x, t):
         if t.dim() == 0:
@@ -262,11 +262,11 @@ class Attention(Module):
 class Unet(Module):
     def __init__(
         self,
-        dim,
+        channels,
         init_dim = None,
         out_dim = None,
-        dim_mults = (1, 2, 4, 8),
-        channels = 3,
+        channel_multipliers = (1, 2, 4, 8),
+        in_channels = 3,
         self_condition = False,
         learned_variance = False,
         learned_sinusoidal_cond = False,
@@ -283,19 +283,19 @@ class Unet(Module):
 
         # determine dimensions
 
-        self.channels = channels
+        self.channels = in_channels
         self.self_condition = self_condition
-        input_channels = channels * (2 if self_condition else 1)
+        input_channels = in_channels * (2 if self_condition else 1)
 
-        init_dim = default(init_dim, dim)
+        init_dim = default(init_dim, channels)
         self.init_conv = nn.Conv2d(input_channels, init_dim, 7, padding = 3)
 
-        dims = [init_dim, *map(lambda m: dim * m, dim_mults)]
+        dims = [init_dim, *map(lambda m: channels * m, channel_multipliers)]
         in_out = list(zip(dims[:-1], dims[1:]))
 
         # time embeddings
 
-        time_dim = dim * 4
+        time_dim = channels * 4
 
         self.random_or_learned_sinusoidal_cond = learned_sinusoidal_cond or random_fourier_features
 
@@ -303,8 +303,8 @@ class Unet(Module):
             sinu_pos_emb = RandomOrLearnedSinusoidalPosEmb(learned_sinusoidal_dim, random_fourier_features)
             fourier_dim = learned_sinusoidal_dim + 1
         else:
-            sinu_pos_emb = SinusoidalPosEmb(dim, theta = sinusoidal_pos_emb_theta)
-            fourier_dim = dim
+            sinu_pos_emb = SinusoidalPosEmb(channels, theta = sinusoidal_pos_emb_theta)
+            fourier_dim = channels
 
         self.time_mlp = nn.Sequential(
             sinu_pos_emb,
@@ -316,14 +316,14 @@ class Unet(Module):
         # attention
 
         if not full_attn:
-            full_attn = (*((False,) * (len(dim_mults) - 1)), True)
+            full_attn = (*((False,) * (len(channel_multipliers) - 1)), True)
 
-        num_stages = len(dim_mults)
+        num_stages = len(channel_multipliers)
         full_attn  = cast_tuple(full_attn, num_stages)
         attn_heads = cast_tuple(attn_heads, num_stages)
         attn_dim_head = cast_tuple(attn_dim_head, num_stages)
 
-        assert len(full_attn) == len(dim_mults)
+        assert len(full_attn) == len(channel_multipliers)
 
         # prepare blocks
 
@@ -365,7 +365,7 @@ class Unet(Module):
                 Upsample(dim_out, dim_in) if not is_last else  nn.Conv2d(dim_out, dim_in, 3, padding = 1)
             ]))
 
-        default_out_dim = channels * (1 if not learned_variance else 2)
+        default_out_dim = in_channels * (1 if not learned_variance else 2)
         self.out_dim = default(out_dim, default_out_dim)
 
         self.final_res_block = resnet_block(init_dim * 2, init_dim)

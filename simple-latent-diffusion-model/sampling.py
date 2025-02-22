@@ -7,7 +7,6 @@ import os
 
 #from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
 from diffusion_model.models.diffusion_model import DiffusionModel
-from diffusion_model.network.base_unet import *
 from helper.painter import Painter
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 #from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
@@ -21,7 +20,6 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     print(f'using device : {device}\t' + (f'{torch.cuda.get_device_name(0)}' if torch.cuda.is_available() else 'CPU' ))
-    
     
     painter = Painter()
     

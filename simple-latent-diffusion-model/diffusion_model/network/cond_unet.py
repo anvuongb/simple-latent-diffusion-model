@@ -30,13 +30,13 @@ class UNetModel(nn.Module):
 
     def __init__(
             self, *,
-            in_channels: int,
-            out_channels: int,
             channels: int,
-            n_res_blocks: int,
-            attention_levels: List[int],
-            channel_multipliers: List[int],
-            n_heads: int,
+            in_channels: int = 3,
+            out_channels: int = 3,
+            n_res_blocks: int = 2,
+            attention_levels: List[int] = [0, 3],
+            channel_multipliers: List[int] = [1, 2, 4, 8],
+            n_heads: int = 8,
             tf_layers: int = 1,
             d_cond: int = 768):
         """
