@@ -8,7 +8,6 @@ import os
 #from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
 from diffusion_model.models.diffusion_model import DiffusionModel
 from diffusion_model.network.base_unet import *
-from helper.data_generator import DataGenerator
 from helper.painter import Painter
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 #from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
@@ -23,13 +22,12 @@ if __name__ == '__main__':
     
     print(f'using device : {device}\t' + (f'{torch.cuda.get_device_name(0)}' if torch.cuda.is_available() else 'CPU' ))
     
-    data_generator = DataGenerator()
-    data_loader = data_generator.random_data(size = (16, 3, 32, 32))
+    
     painter = Painter()
     
     sampler = DDIM(CONFIG_PATH)
-    network = BaseUnet(CONFIG_PATH)
-    dm = DiffusionModel(UnetWrapper(BaseUnet, config_path), sampler, IMAGE_SHAPE)
+    network = BaseUnet
+    dm = DiffusionModel(UnetWrapper(BaseUnet, CONFIG_PATH), sampler, IMAGE_SHAPE)
     
     sample = dm()
     painter.show_images(sample)

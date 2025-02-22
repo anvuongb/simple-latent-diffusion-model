@@ -29,4 +29,4 @@ sampler:
 
 unet:
     channels: 64
-    channels_mults : [1, 2, 4]
+    channel_mults : [1, 2, 4]

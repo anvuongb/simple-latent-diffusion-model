@@ -1,19 +1,4 @@
-"""
----
-title: U-Net for Stable Diffusion
-summary: >
- Annotated PyTorch implementation/tutorial of the U-Net in stable diffusion.
----
-
-#  U-Net for [Stable Diffusion](../index.html)
-
-This implements the U-Net that
- gives $\epsilon_\text{cond}(x_t, c)$
-
-We have kept to the model definition and naming unchanged from
-[CompVis/stable-diffusion](https://github.com/CompVis/stable-diffusion)
-so that we can load the checkpoints directly.
-"""
+# https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/stable_diffusion/model/unet.py
 
 import math
 from typing import List
@@ -23,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from diffusion_model.network.u_net_attention import SpatialTransformer
+from diffusion_model.network.unet_attention import SpatialTransformer
 import yaml
 
 class ConditionalUnetworkWrapper(nn.Module):
