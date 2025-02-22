@@ -5,11 +5,13 @@ import os
 #from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
 #from diffusion_model.network.cond_u_net import ConditionalUnetwork
 
-from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
+#from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
+from diffusion_model.models.diffusion_model import DiffusionModel
+from diffusion_model.network.base_unet import *
 from helper.data_generator import DataGenerator
 from helper.painter import Painter
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
+#from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
 from diffusion_model.sampler.ddim import DDIM
 
 IMAGE_SHAPE = (3, 32, 32)
@@ -26,8 +28,8 @@ if __name__ == '__main__':
     painter = Painter()
     
     sampler = DDIM(CONFIG_PATH)
-    network = UnconditionalUnetworkWrapper(CONFIG_PATH)
-    dm = UnconditionalDiffusionModel(network, sampler, IMAGE_SHAPE)
+    network = BaseUnet(CONFIG_PATH)
+    dm = DiffusionModel(UnetWrapper(BaseUnet, config_path), sampler, IMAGE_SHAPE)
     
     sample = dm()
     painter.show_images(sample)
