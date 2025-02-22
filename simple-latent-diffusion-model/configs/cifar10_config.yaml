@@ -28,5 +28,5 @@ sampler:
     eta: 1
 
 unet:
-    channels: 3
+    channels: 64
     channels_mults : [1, 2, 4]
