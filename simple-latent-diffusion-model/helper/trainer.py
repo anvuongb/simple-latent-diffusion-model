@@ -20,7 +20,9 @@ class Trainer():
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr = 1e-4)
         self.scheduler = scheduler
         if self.scheduler is None:
-            self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma = 0.998)
+            self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+                self.optimizer, min_lr=1e-6
+            )
         self.accelerator = Accelerator(mixed_precision = 'no')
         self.start_epoch = start_epoch
         self.best_loss = best_loss
@@ -69,6 +71,6 @@ class Trainer():
                         "best_loss": self.best_loss,
                         "batch_size": dl.batch_size,
                         "number_of_batches": len(dl)
-                        }, file_name + '_epoch' + str(epoch) + '.pth')
+                        }, file_name + '.pth')
                     log_string += " --> Best model ever (stored)"
                 print(log_string)
