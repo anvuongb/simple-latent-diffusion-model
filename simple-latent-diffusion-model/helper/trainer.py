@@ -57,8 +57,8 @@ class Trainer():
                 
             self.accelerator.wait_for_everyone()
             if self.accelerator.is_main_process:
-                self.scheduler.step()
                 epoch_loss = epoch_loss / len(progress_bar)
+                self.scheduler.step(epoch_loss)
                 log_string = f"Loss at epoch {epoch}: {epoch_loss :.4f}"
                 if self.best_loss > epoch_loss:
                     self.best_loss = epoch_loss
