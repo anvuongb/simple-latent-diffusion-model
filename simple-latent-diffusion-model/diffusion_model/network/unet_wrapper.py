@@ -13,6 +13,7 @@ class UnetWrapper(nn.Module):
         if t.dim() == 0:
             t = x.new_full((x.size(0), ), t, dtype = torch.int, device = x.device)
         if y is not None:
+            y = y.unsqueeze(1)
             return self.network(x, t, y)
         else: 
             return self.network(x, t)

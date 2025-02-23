@@ -28,5 +28,7 @@ sampler:
     eta: 1
 
 unet:
-    channels: 64
-    channel_multipliers : [1, 2, 4]
+    channels: 32
+    channel_multipliers: [1, 2, 4, ]
+    attention_levels: [0]
+    d_cond : 1
