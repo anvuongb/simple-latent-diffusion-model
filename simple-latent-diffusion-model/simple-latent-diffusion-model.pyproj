@@ -34,6 +34,7 @@
     <Compile Include="diffusion_model\models\clip_latent_diffusion_model.py" />
     <Compile Include="diffusion_model\models\cond_diffusion_model.py" />
     <Compile Include="diffusion_model\models\diffusion_model.py" />
+    <Compile Include="diffusion_model\network\blocks.py" />
     <Compile Include="diffusion_model\network\timestep_embedding.py" />
     <Compile Include="diffusion_model\network\unet_wrapper.py" />
     <Compile Include="diffusion_model\sampler\base_sampler.py" />
@@ -50,8 +51,8 @@
     <Compile Include="helper\util.py" />
     <Compile Include="diffusion_model\models\latent_diffusion_model.py" />
     <Compile Include="diffusion_model\models\uncond_diffusion_model.py" />
-    <Compile Include="diffusion_model\network\attend.py" />
-    <Compile Include="diffusion_model\network\uncond_unet.py" />
+    <Compile Include="diffusion_model\network\attention.py" />
+    <Compile Include="diffusion_model\network\unet.py" />
     <Compile Include="diffusion_model\sampler\ddim.py" />
     <Compile Include="diffusion_model\sampler\ddpm.py" />
     <Compile Include="sampling.py" />
