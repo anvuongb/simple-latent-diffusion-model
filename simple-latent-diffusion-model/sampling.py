@@ -7,6 +7,8 @@ import os
 
 #from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
 from diffusion_model.models.diffusion_model import DiffusionModel
+from diffusion_model.network.cond_unet import UNetModel
+from diffusion_model.network.unet_wrapper import UnetWrapper
 from helper.painter import Painter
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 #from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
@@ -24,10 +26,15 @@ if __name__ == '__main__':
     painter = Painter()
     
     sampler = DDIM(CONFIG_PATH)
-    network = BaseUnet
-    dm = DiffusionModel(UnetWrapper(BaseUnet, CONFIG_PATH), sampler, IMAGE_SHAPE)
+    network = UnetWrapper(UNetModel, CONFIG_PATH)
+    dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
+    painter = Painter()
+    #data_generator = DataGenerator()
+    #data_loader = data_generator.cifar10(path = './datasets' ,batch_size = 32)
     
-    sample = dm()
+    dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
+    
+    sample = dm(2, y = torch.tensor([2, 2], dtype =torch.float32))
     painter.show_images(sample)
     
     
