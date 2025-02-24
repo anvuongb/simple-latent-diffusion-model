@@ -1,5 +1,5 @@
 # https://github.com/lucidrains/denoising-diffusion-pytorch/blob/main/denoising_diffusion_pytorch/denoising_diffusion_pytorch.py
-import math
+
 from functools import partial
 import torch
 from torch import nn
@@ -23,30 +23,6 @@ def cast_tuple(t, length = 1):
 
 def divisible_by(numer, denom):
     return (numer % denom) == 0
-
-def identity(t, *args, **kwargs):
-    return t
-
-def cycle(dl):
-    while True:
-        for data in dl:
-            yield data
-
-def has_int_squareroot(num):
-    return (math.sqrt(num) ** 2) == num
-
-def num_to_groups(num, divisor):
-    groups = num // divisor
-    remainder = num % divisor
-    arr = [divisor] * groups
-    if remainder > 0:
-        arr.append(remainder)
-    return arr
-
-def convert_image_to_fn(img_type, image):
-    if image.mode != img_type:
-        return image.convert(img_type)
-    return image
 
 # small helper modules
 

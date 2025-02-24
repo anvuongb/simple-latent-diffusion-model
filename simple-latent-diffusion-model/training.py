@@ -4,7 +4,6 @@ import os
 
 from clip.models.clip import CLIP
 from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
-from diffusion_model.network.cond_u_net import ConditionalUnetworkWrapper
 
 from helper.data_generator import DataGenerator
 from helper.painter import Painter

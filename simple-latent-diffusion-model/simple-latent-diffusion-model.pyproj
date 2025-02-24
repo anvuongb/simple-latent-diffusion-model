@@ -44,6 +44,7 @@
     <Compile Include="auto_encoder\models\encoder.py" />
     <Compile Include="auto_encoder\models\variational_auto_encoder.py" />
     <Compile Include="helper\beta_generator.py" />
+    <Compile Include="helper\ema.py" />
     <Compile Include="helper\loader.py" />
     <Compile Include="helper\painter.py" />
     <Compile Include="helper\tokenizer.py" />
