@@ -34,8 +34,8 @@ if __name__ == '__main__':
     
     dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     
-    sample = dm(2)
-    #sample = dm(2, y = torch.tensor([2, 2], dtype =torch.float32))
+    #sample = dm(2)
+    sample = dm(2, y = torch.tensor([2, 2], dtype =torch.float32))
     painter.show_images(sample)
     
     

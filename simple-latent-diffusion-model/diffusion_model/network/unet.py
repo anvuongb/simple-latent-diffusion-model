@@ -105,6 +105,7 @@ class Unet(Module):
         dim,
         init_dim = None,
         out_dim = None,
+        cond_dim = None,
         dim_mults = (1, 2, 4, 8),
         channels = 3,
         dropout = 0.,
@@ -126,8 +127,6 @@ class Unet(Module):
         in_out = list(zip(dims[:-1], dims[1:]))
 
         # time embeddings
-        print(dims)
-        print(in_out)
         time_dim = dim * 4
 
         sinu_pos_emb = SinusoidalEmbedding(dim)
@@ -155,7 +154,8 @@ class Unet(Module):
         # prepare blocks
 
         FullAttention = Attention
-        resnet_block = partial(ResnetBlock, t_emb_dim = time_dim, dropout = dropout)
+        resnet_block = partial(ResnetBlock, 
+                               t_emb_dim = time_dim, y_emb_dim = cond_dim, dropout = dropout)
 
         # layers
 
