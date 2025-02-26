@@ -38,6 +38,7 @@
     <Compile Include="diffusion_model\network\timestep_embedding.py" />
     <Compile Include="diffusion_model\network\unet_wrapper.py" />
     <Compile Include="diffusion_model\sampler\base_sampler.py" />
+    <Compile Include="helper\cond_encoder.py" />
     <Compile Include="helper\data_generator.py" />
     <Compile Include="auto_encoder\models\auto_encoder.py" />
     <Compile Include="auto_encoder\models\decoder.py" />

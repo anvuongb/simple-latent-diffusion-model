@@ -10,6 +10,7 @@ from diffusion_model.models.diffusion_model import DiffusionModel
 from diffusion_model.network.unet_wrapper import UnetWrapper
 from diffusion_model.network.unet import Unet
 from helper.painter import Painter
+from helper.cond_encoder import ConditionEncoder
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 #from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
 from diffusion_model.sampler.ddim import DDIM
@@ -26,7 +27,8 @@ if __name__ == '__main__':
     painter = Painter()
     
     sampler = DDIM(CONFIG_PATH)
-    network = UnetWrapper(Unet, CONFIG_PATH)
+    cond_encoder = ConditionEncoder('class', 10, 128)
+    network = UnetWrapper(Unet, CONFIG_PATH, cond_encoder)
     dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     painter = Painter()
     #data_generator = DataGenerator()
@@ -35,7 +37,7 @@ if __name__ == '__main__':
     dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     
     #sample = dm(2)
-    sample = dm(2, y = torch.tensor([2, 2], dtype =torch.float32))
+    sample = dm(2, y = 2)
     painter.show_images(sample)
     
     

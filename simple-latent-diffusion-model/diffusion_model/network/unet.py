@@ -106,11 +106,10 @@ class Unet(Module):
         time_dim = dim * 4
 
         sinu_pos_emb = SinusoidalEmbedding(dim)
-        fourier_dim = dim
 
         self.time_mlp = nn.Sequential(
             sinu_pos_emb,
-            nn.Linear(fourier_dim, time_dim),
+            nn.Linear(dim, time_dim),
             nn.GELU(),
             nn.Linear(time_dim, time_dim)
         )
