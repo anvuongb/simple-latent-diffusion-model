@@ -27,6 +27,11 @@ sampler:
     sampling_T: 20
     eta: 1
 
+cond_encoder:
+    cond_type : 'class'
+    num_cond : 10
+    embed_dim : 4
+
 unet:
     dim: 64
     cond_dim : 4
