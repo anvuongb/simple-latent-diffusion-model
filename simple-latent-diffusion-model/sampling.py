@@ -27,7 +27,7 @@ if __name__ == '__main__':
     painter = Painter()
     
     sampler = DDIM(CONFIG_PATH)
-    cond_encoder = ConditionEncoder('class', 10, 128)
+    cond_encoder = ConditionEncoder(CONFIG_PATH)
     network = UnetWrapper(Unet, CONFIG_PATH, cond_encoder)
     dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     painter = Painter()
