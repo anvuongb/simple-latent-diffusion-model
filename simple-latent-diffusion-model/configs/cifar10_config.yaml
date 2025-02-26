@@ -24,7 +24,7 @@ vae:
 sampler:
     beta: 'linear'
     T: 1000
-    sampling_T: 20
+    sampling_T: 50
     eta: 1
 
 cond_encoder:
