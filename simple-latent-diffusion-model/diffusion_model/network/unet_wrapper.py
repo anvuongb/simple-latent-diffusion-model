@@ -12,7 +12,7 @@ class UnetWrapper(nn.Module):
         self.add_module('network', Unet(**config))
 
         # ConditionalEncoder
-        self.cond_encoder = cond_encoder
+        self.add_module('cond_encoder', cond_encoder)
         
     def forward(self, x, t, y=None):
         if t.dim() == 0:
