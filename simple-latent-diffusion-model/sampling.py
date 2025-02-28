@@ -14,6 +14,7 @@ from helper.cond_encoder import ConditionEncoder
 #from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 #from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
 from diffusion_model.sampler.ddim import DDIM
+from diffusion_model.sampler.ddpm import DDPM
 
 IMAGE_SHAPE = (3, 32, 32)
 CONFIG_PATH = './configs/cifar10_config.yaml'
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     
     painter = Painter()
     
-    sampler = DDIM(CONFIG_PATH)
+    sampler = DDPM(CONFIG_PATH)
     cond_encoder = ConditionEncoder(CONFIG_PATH)
     network = UnetWrapper(Unet, CONFIG_PATH, cond_encoder)
     dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
