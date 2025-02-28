@@ -1,4 +1,4 @@
-https://github.com/lucidrains/ema-pytorch/tree/main
+# https://github.com/lucidrains/ema-pytorch/tree/main
 
 from __future__ import annotations
 from typing import Callable
