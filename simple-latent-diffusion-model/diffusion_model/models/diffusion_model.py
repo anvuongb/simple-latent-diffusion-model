@@ -1,5 +1,8 @@
 import torch
 import torch.nn as nn
+from einops import reduce
+
+from helper.util import extract
 
 class DiffusionModel(nn.Module) :
     def __init__(self, network : nn.Module, sampler : nn.Module, image_shape):
@@ -9,13 +12,26 @@ class DiffusionModel(nn.Module) :
         self.sampler.set_network(network)
         self.T = sampler.T
         self.image_shape = image_shape
+
+        # loss weight
+        alpha_bar = self.sampler.alpha_bar
+        snr = alpha_bar / (1 - alpha_bar)
+        clipped_snr = snr.clone()
+        clipped_snr.clamp_(max = 5)
+        self.loss_weight = clipped_snr / snr
+
+    def weighted_loss(self, t, eps, eps_hat):
+        loss = nn.functional.mse_loss(eps, eps_hat, reduction='none')
+        loss = reduce(loss, 'b ... -> b', 'mean')
+        loss = loss * extract(self.loss_weight, t, loss.shape)
+        return loss.mean()
         
     def loss(self, x0, **kwargs):
         eps = torch.randn_like(x0)
         t = torch.randint(0, self.T, (x0.size(0),), device = x0.device)
         x_t = self.sampler.q_sample(x0, t, eps)
         eps_hat = self.network(x = x_t, t = t, **kwargs)
-        return nn.functional.mse_loss(eps, eps_hat)
+        return self.weighted_loss(t, eps, eps_hat)
             
     @torch.no_grad()
     def forward(self, n_samples : int = 4, **kwargs):
