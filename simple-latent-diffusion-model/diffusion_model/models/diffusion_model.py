@@ -18,7 +18,7 @@ class DiffusionModel(nn.Module) :
         snr = alpha_bar / (1 - alpha_bar)
         clipped_snr = snr.clone()
         clipped_snr.clamp_(max = 5)
-        self.loss_weight = clipped_snr / snr
+        self.register_buffer('loss_weight', clipped_snr / snr)
 
     def weighted_loss(self, t, eps, eps_hat):
         loss = nn.functional.mse_loss(eps, eps_hat, reduction='none')
