@@ -22,7 +22,6 @@ class AdaptiveGroupNorm(nn.Module):
         beta = self.beta_proj(emb).view(x.size(0), -1, 1, 1)
         return gamma * self.norm(x) + beta
 
-
 class Block(nn.Module):
     def __init__(self, dim, dim_out, groups, time_emb_dim, cond_emb_dim=None, dropout=0.0, use_depthwise=False):
         super().__init__()

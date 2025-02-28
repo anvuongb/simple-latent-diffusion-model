@@ -15,12 +15,13 @@ class ConditionEncoder(nn.Module):
         embed_dim = config['embed_dim']
 
         if cond_type == 'class':
-            self.embed = nn.Embedding(num_cond, embed_dim)
+            self.embed = nn.Embedding(num_cond, 64)
         elif cond_type == 'numeric':
             self.embed = nn.Linear(num_cond, embed_dim)
 
         self.cond_mlp = nn.Sequential(
             self.embed,
+            nn.Linear(64, embed_dim)
             nn.GELU(),
             nn.Linear(embed_dim, embed_dim)
             )
