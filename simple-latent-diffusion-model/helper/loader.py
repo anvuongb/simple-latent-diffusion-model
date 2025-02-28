@@ -20,7 +20,7 @@ class Loader():
         if is_ema:
             ema = EMA(model)
             ema.load_state_dict(check_point['ema_state_dict'])
-            ema.copy_to(model)
+            model = ema.copy_to(model)
         else:
             model.load_state_dict(check_point["model_state_dict"]) 
         model.eval()

@@ -37,6 +37,7 @@ class EMA(nn.Module):
         """Copies the EMA parameter to model"""
         for s_param, param in zip(self.shadow_params, model.parameters()):
             param.data.copy_(s_param.data)
+        return model
 
     def forward(self, *args, **kwargs):
         """Use EMA parameters for inference"""
