@@ -17,12 +17,10 @@ class Loader():
              print_dict : bool = True, is_ema: bool = True):
         check_point = torch.load(file_name + ".pth", map_location=self.device)
         if print_dict: self.print_model(check_point)
-        if is_ema:
-            ema = EMA(model)
-            ema.load_state_dict(check_point['ema_state_dict'])
-            model = ema.copy_to(model)
-        else:
-            model.load_state_dict(check_point["model_state_dict"]) 
+        model = EMA(model)
+        model.load_state_dict(check_point['ema_state_dict'])
+        if is_ema == False:
+            model = model.ema_model
         model.eval()
         print("===Model loaded!===")
         return model
