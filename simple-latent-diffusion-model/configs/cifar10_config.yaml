@@ -30,8 +30,8 @@ sampler:
 cond_encoder:
     cond_type : 'class'
     num_cond : 10
-    dim : 4 # better to equal to 'dim' in unet
+    embed_dim : 4 # Should be the same with 'cond_dim' in unet
 
 unet:
-    dim: 64
-    cond_dim : 16
+    dim: 32
+    cond_dim : 4

@@ -12,17 +12,16 @@ class ConditionEncoder(nn.Module):
             config = yaml.safe_load(file)['cond_encoder']
         cond_type = config['cond_type']
         num_cond = config['num_cond']
-        dim = config['dim']
-        embed_dim = dim * 4
+        embed_dim = config['embed_dim']
         
         if cond_type == 'class':
-            self.embed = nn.Embedding(num_cond, dim)
+            self.embed = nn.Embedding(num_cond, embed_dim)
         elif cond_type == 'numeric':
-            self.embed = nn.Linear(num_cond, dim)
+            self.embed = nn.Linear(num_cond, embed_dim)
 
         self.cond_mlp = nn.Sequential(
             self.embed,
-            nn.Linear(dim, embed_dim),
+            nn.Linear(embed_dim, embed_dim),
             nn.GELU(),
             nn.Linear(embed_dim, embed_dim)
             )
