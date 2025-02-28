@@ -21,7 +21,7 @@ class ConditionEncoder(nn.Module):
 
         self.cond_mlp = nn.Sequential(
             self.embed,
-            nn.Linear(64, embed_dim)
+            nn.Linear(64, embed_dim),
             nn.GELU(),
             nn.Linear(embed_dim, embed_dim)
             )
