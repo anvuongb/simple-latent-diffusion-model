@@ -14,8 +14,9 @@ class Trainer():
                  scheduler: torch.optim.lr_scheduler = None,
                  start_epoch = 0,
                  best_loss = float("inf")):
+        self.accelerator = Accelerator(mixed_precision = 'no')
         self.model = model
-        self.ema = EMA(self.model)
+        self.ema = EMA(self.model).to(self.accelerator.device)
         self.optimizer = optimizer
         self.loss_fn = loss_fn
         if self.optimizer is None:
@@ -25,7 +26,6 @@ class Trainer():
             self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
                 self.optimizer, min_lr=1e-6
             )
-        self.accelerator = Accelerator(mixed_precision = 'no')
         self.start_epoch = start_epoch
         self.best_loss = best_loss
             
