@@ -22,7 +22,7 @@ vae:
     kld_weight: 1e-6
 
 sampler:
-    beta: 'linear'
+    beta: 'sigmoid'
     T: 1000
     sampling_T: 50
     eta: 1
@@ -30,8 +30,9 @@ sampler:
 cond_encoder:
     cond_type : 'class'
     num_cond : 10
-    embed_dim : 4 # Should be the same with 'cond_dim' in unet
+    embed_dim : 4 
+    cond_dim : 128 # Should be the same with 'cond_dim' in unet
 
 unet:
     dim: 32
-    cond_dim : 4
+    cond_dim : 128
