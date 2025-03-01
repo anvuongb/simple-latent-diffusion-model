@@ -13,6 +13,7 @@ class ConditionEncoder(nn.Module):
         cond_type = config['cond_type']
         num_cond = config['num_cond']
         embed_dim = config['embed_dim']
+        cond_dim = config['cond_dim']
         
         if cond_type == 'class':
             self.embed = nn.Embedding(num_cond, embed_dim)
@@ -21,9 +22,9 @@ class ConditionEncoder(nn.Module):
 
         self.cond_mlp = nn.Sequential(
             self.embed,
-            nn.Linear(embed_dim, embed_dim),
+            nn.Linear(embed_dim, cond_dim),
             nn.GELU(),
-            nn.Linear(embed_dim, embed_dim)
+            nn.Linear(cond_dim, cond_dim)
             )
 
     def forward(self, y: torch.tensor):
