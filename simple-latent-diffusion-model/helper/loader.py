@@ -26,18 +26,16 @@ class Loader():
         print("===Model loaded!===")
         return model
         
-    def load_for_training(self, file_name: str, model: nn.Module, is_ema: bool = True):
+    def load_for_training(self, file_name: str, model: nn.Module, print_dict: bool = True):
         check_point = torch.load(file_name + ".pth", map_location=self.device)
-        if is_ema:
-            ema = EMA(model)
-            ema.load_state_dict(check_point['ema_state_dict'])
-            ema.copy_to(model)
-        else:
-            model.load_state_dict(check_point["model_state_dict"])
+        if print_dict: self.print_model(check_point)
+        model = EMA(model)
+        model.load_state_dict(check_point['ema_state_dict'])
+        model = model.ema_model
+        for param in model.parameters():
+            param.requires_grad_(True)
         model.train()
-        optimizer = torch.optim.Adam(model.parameters(), lr = 1e-4)
-        optimizer.load_state_dict(check_point["optimizer_state_dict"])
         epoch = check_point["epoch"]
         loss = check_point["best_loss"]
-        print("===Model/Optimizer/Epoch/Loss loaded!===")
-        return model, optimizer, epoch, loss
+        print("===Model/Epoch/Loss loaded!===")
+        return model, epoch, loss

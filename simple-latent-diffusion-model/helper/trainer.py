@@ -67,8 +67,6 @@ class Trainer():
                     self.best_loss = epoch_loss
                     torch.save({
                         "ema_state_dict": self.ema.state_dict(),
-                        "optimizer_state_dict": self.optimizer.state_dict(),
-                        "scheduler_state_dict": self.scheduler.state_dict(),
                         "epoch": epoch,
                         "training_step": epoch * len(dl),
                         "best_loss": self.best_loss,
