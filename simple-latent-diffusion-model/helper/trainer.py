@@ -68,6 +68,7 @@ class Trainer():
                     torch.save({
                         "model_state_dict": self.accelerator.get_state_dict(self.model),
                         "ema_state_dict": self.ema.state_dict(),
+                        "optimizer_state_dict": self.optimizer.state_dict(),
                         "epoch": epoch,
                         "training_step": epoch * len(dl),
                         "best_loss": self.best_loss,
