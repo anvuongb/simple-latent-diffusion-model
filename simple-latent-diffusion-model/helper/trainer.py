@@ -10,15 +10,19 @@ class Trainer():
     def __init__(self,
                  model: nn.Module,
                  loss_fn: Callable,
+                 ema: EMA = None,
                  optimizer: torch.optim.Optimizer = None,
                  scheduler: torch.optim.lr_scheduler = None,
                  start_epoch = 0,
                  best_loss = float("inf")):
         self.accelerator = Accelerator(mixed_precision = 'no')
-        self.model = model
-        self.ema = EMA(self.model).to(self.accelerator.device)
-        self.optimizer = optimizer
+        self.model = model 
+        if ema is None:
+            self.ema = EMA(self.model).to(self.accelerator.device)            
+        else:
+            self.ema = ema.to(self.accelerator.device)
         self.loss_fn = loss_fn
+        self.optimizer = optimizer
         if self.optimizer is None:
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr = 1e-4)
         self.scheduler = scheduler

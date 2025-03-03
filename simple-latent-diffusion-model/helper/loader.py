@@ -36,9 +36,14 @@ class Loader():
         for param in model.parameters():
             param.requires_grad_(True)
         model.train()
+        ema = EMA(model)
+        ema.load_state_dict(check_point['ema_state_dict'])
+        for param in ema.parameters():
+            param.requires_grad_(True)
+        ema.train()
         optimizer = torch.optim.Adam(model.parameters(), lr = 1e-4)
         optimizer.load_state_dict(check_point["optimizer_state_dict"])
         epoch = check_point["epoch"]
         loss = check_point["best_loss"]
-        print("===Model/Optimizer/Epoch/Loss loaded!===")
-        return model, optimizer, epoch, loss
+        print("===Model/EMA/Optimizer/Epoch/Loss loaded!===")
+        return model, ema, optimizer, epoch, loss
