@@ -15,7 +15,8 @@ class Trainer():
                  scheduler: torch.optim.lr_scheduler = None,
                  start_epoch = 0,
                  best_loss = float("inf"),
-                 accumulation_steps: int = 1):
+                 accumulation_steps: int = 1,
+                 max_grad_norm: float = 1.0):
         self.accelerator = Accelerator(mixed_precision = 'no')
         self.model = model 
         if ema is None:
@@ -26,6 +27,7 @@ class Trainer():
         self.optimizer = optimizer
         if self.optimizer is None:
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr = 1e-4)
+        self.optimizer.zero_grad()
         self.scheduler = scheduler
         if self.scheduler is None:
             self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -34,6 +36,7 @@ class Trainer():
         self.start_epoch = start_epoch
         self.best_loss = best_loss
         self.accumulation_steps = accumulation_steps
+        self.max_grad_norm = max_grad_norm
             
     def train(self, dl : DataLoader, epochs : int, file_name : str, no_label : bool = False):
         self.model.train()
@@ -44,25 +47,36 @@ class Trainer():
         for epoch in range(self.start_epoch + 1, epochs + 1):
             epoch_loss = 0.0
             progress_bar = tqdm(data_loader, leave=False, desc=f"Epoch {epoch}/{epochs}", colour="#005500", disable = not self.accelerator.is_local_main_process)
-            for batch in progress_bar:
-                self.optimizer.zero_grad()
-                if no_label: 
-                    if type(batch) == list:
-                        x = batch[0].to(self.accelerator.device)
+            for step, batch in enumerate(progress_bar):
+                with self.accelerator.accumulate(self.model):  # Context manager for accumulation
+                    if no_label:
+                        if type(batch) == list:
+                            x = batch[0].to(self.accelerator.device)
+                        else:
+                            x = batch.to(self.accelerator.device)
                     else:
-                        x = batch.to(self.accelerator.device)
-                else: x, y = batch[0].to(self.accelerator.device), batch[1].to(self.accelerator.device)
-                
-                if no_label == True:
-                    loss = self.loss_fn(x0 = x)
-                else:
-                    loss = self.loss_fn(x0 = x, y = y)
+                        x, y = batch[0].to(self.accelerator.device), batch[1].to(self.accelerator.device)
 
-                self.accelerator.backward(loss)
-                self.optimizer.step()
-                self.ema.update()
-                epoch_loss += loss.item()
-                progress_bar.set_postfix(loss=epoch_loss / len(progress_bar))
+                    if no_label:
+                        loss = self.loss_fn(x0=x)
+                    else:
+                        loss = self.loss_fn(x0=x, y=y)
+
+                    loss = loss / self.accumulation_steps   # Normalize the loss
+                    self.accelerator.backward(loss)
+
+                    # Gradient Clipping:
+                    if self.max_grad_norm is not None:
+                        self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
+
+                    if (step + 1) % self.accumulation_steps == 0 or (step + 1 == len(data_loader)):
+                         # Only step optimizer and scheduler when we have accumulated enough
+                        self.optimizer.step()
+                        self.optimizer.zero_grad()
+                        self.ema.update()
+
+                    epoch_loss += loss.item() * self.accumulation_steps  # Scale back up for correct display
+                    progress_bar.set_postfix(loss=epoch_loss / (min(step + 1, len(data_loader)))) # Correct progress bar update
                 
             self.accelerator.wait_for_everyone()
             if self.accelerator.is_main_process:
