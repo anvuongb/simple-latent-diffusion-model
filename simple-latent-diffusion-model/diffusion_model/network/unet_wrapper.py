@@ -20,14 +20,13 @@ class UnetWrapper(nn.Module):
         if y is not None:
             assert self.cond_encoder is not None, 'You need to set ConditionalEncoder for conditional sampling.'
             if isinstance(y, str):
-                y = self.cond_encoder(y)
-                if y.size(0) != x.size(0):
-                    y = y.repeat(x.size(0), 1)
-            elif torch.is_tensor(y) == False:
-                y = torch.tensor([y], device=x.device)
+                y = self.cond_encoder(y).to(x.device)
+            else:
+                if torch.is_tensor(y) == False:
+                    y = torch.tensor([y], device=x.device)
+                y = self.cond_encoder(y).squeeze()
             if y.size(0) != x.size(0):
                 y = y.repeat(x.size(0), 1)
-                y = self.cond_encoder(y).squeeze()
             return self.network(x, t, y)
         else: 
             return self.network(x, t)
