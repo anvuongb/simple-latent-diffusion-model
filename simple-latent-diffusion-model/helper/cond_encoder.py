@@ -2,6 +2,25 @@ import torch
 import torch.nn as nn
 import yaml
 
+from clip.models.clip import CLIP
+
+class CLIPEncoder(nn.Module):
+    def __init__(
+        self,
+        clip: CLIP
+        ):
+        super().__init__()
+        self.clip = clip
+        self.clip.eval()
+        for param in self.clip.parameters():
+            param.requires_grad = False
+
+    def forward(self, y):
+        if isinstance(y, str):
+            return self.clip.text_encode(y, tokenize=True)
+        else:
+            return self.clip.text_encode(y, tokenize=False)
+
 class ConditionEncoder(nn.Module):
     def __init__(
         self, 

@@ -14,7 +14,8 @@ class Trainer():
                  optimizer: torch.optim.Optimizer = None,
                  scheduler: torch.optim.lr_scheduler = None,
                  start_epoch = 0,
-                 best_loss = float("inf")):
+                 best_loss = float("inf"),
+                 accumulation_steps: int = 1):
         self.accelerator = Accelerator(mixed_precision = 'no')
         self.model = model 
         if ema is None:
@@ -32,6 +33,7 @@ class Trainer():
             )
         self.start_epoch = start_epoch
         self.best_loss = best_loss
+        self.accumulation_steps = accumulation_steps
             
     def train(self, dl : DataLoader, epochs : int, file_name : str, no_label : bool = False):
         self.model.train()

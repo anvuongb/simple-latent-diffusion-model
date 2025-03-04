@@ -36,4 +36,4 @@ cond_encoder:
 unet:
     dim: 64
     dim_mults: [1, 2, 4, 8]
-    cond_dim : 256
+    cond_dim : 512

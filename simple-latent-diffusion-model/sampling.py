@@ -1,20 +1,16 @@
 import torch
-#from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
+from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
 import os
-#from clip.models.clip import CLIP
-#from diffusion_model.models.clip_latent_diffusion_model import CLIPLatentDiffusionModel
-#from diffusion_model.network.cond_u_net import ConditionalUnetwork
+from clip.models.ko_clip import KoCLIPWrapper
 
-#from diffusion_model.models.uncond_diffusion_model import UnconditionalDiffusionModel
 from diffusion_model.models.diffusion_model import DiffusionModel
 from diffusion_model.network.unet_wrapper import UnetWrapper
 from diffusion_model.network.unet import Unet
 from helper.painter import Painter
 from helper.cond_encoder import ConditionEncoder
-#from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-#from diffusion_model.network.uncond_u_net import UnconditionalUnetworkWrapper
+from helper.cond_encoder import CLIPEncoder
+from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 from diffusion_model.sampler.ddim import DDIM
-from diffusion_model.sampler.ddpm import DDPM
 
 IMAGE_SHAPE = (3, 32, 32)
 CONFIG_PATH = './configs/cifar10_config.yaml'
@@ -27,18 +23,24 @@ if __name__ == '__main__':
     
     painter = Painter()
     
-    sampler = DDPM(CONFIG_PATH)
-    cond_encoder = ConditionEncoder(CONFIG_PATH)
+    sampler = DDIM(CONFIG_PATH)
+    vae = VariationalAutoEncoder(CONFIG_PATH)
+    #trainer = Trainer(vae, loss_fn = vae.loss)
+    #trainer.train(data_loader, 1000, VAE_FILE_NAME, True)
+    
+    clip = KoCLIPWrapper()
+    cond_encoder = CLIPEncoder(clip)
+    #cond_encoder = ConditionEncoder(CONFIG_PATH)
     network = UnetWrapper(Unet, CONFIG_PATH, cond_encoder)
-    dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
+    dm = LatentDiffusionModel(network, sampler, vae)
     painter = Painter()
     #data_generator = DataGenerator()
     #data_loader = data_generator.cifar10(path = './datasets' ,batch_size = 32)
     
-    dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
+    #dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     
     #sample = dm(2)
-    sample = dm(2, y = 2)
+    sample = dm.sample(2, y = '...')
     painter.show_images(sample)
     
     
