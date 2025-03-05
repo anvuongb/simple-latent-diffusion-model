@@ -66,7 +66,7 @@ class DataGenerator():
         
     def cifar10(self, path = './datasets', batch_size : int = 64, train : bool = True):
         train_data = CIFAR10(path, download = True, train = train, transform = self.transform)
-        dl = DataLoader(train_data, batch_size, shuffle = True, num_wokers=self.num_workers, pin_memory=self.pin_memory)
+        dl = DataLoader(train_data, batch_size, shuffle = True, num_workers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
     def celeba(self, path = './datasets', batch_size : int = 16):
@@ -76,11 +76,11 @@ class DataGenerator():
             Resize(128),
             Lambda(lambda x: (x - 0.5) * 2)
             ]))
-        dl = DataLoader(train_data, batch_size, shuffle = True, num_wokers=self.num_workers, pin_memory=self.pin_memory)
+        dl = DataLoader(train_data, batch_size, shuffle = True, num_workers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
     def composite(self, path, text_path, batch_size : int = 16):
-        return DataLoader(CompositeDataset(path, text_path), batch_size=batch_size, num_wokers=self.num_workers, pin_memory=self.pin_memory)
+        return DataLoader(CompositeDataset(path, text_path), batch_size=batch_size, num_workers=self.num_workers, pin_memory=self.pin_memory)
 
     def random_data(self, size, batch_size : int = 4):
         train_data = torch.randn(size)
