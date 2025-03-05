@@ -34,6 +34,7 @@ class KoCLIPWrapper(nn.Module):
             tokens = self.tokenizer(text, padding=True, truncation=True, return_tensors="pt")['input_ids']
         else:
             tokens = text
+        tokens = tokens.to(self.model.device)
         return self.model.get_text_features(tokens)
     
     def forward(self, image, text, tokenize=True):
