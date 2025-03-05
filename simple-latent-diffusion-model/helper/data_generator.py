@@ -56,15 +56,17 @@ class CompositeDataset(Dataset):
         return image, text
 
 class DataGenerator():
-    def __init__(self, ):
+    def __init__(self, num_workers: int = 4, pin_memory: bool = True):
         self.transform = Compose([
             ToTensor(),
             Lambda(lambda x: (x - 0.5) * 2)
             ])
+        self.num_workers = num_workers
+        self.pin_memory = pin_memory
         
     def cifar10(self, path = './datasets', batch_size : int = 64, train : bool = True):
         train_data = CIFAR10(path, download = True, train = train, transform = self.transform)
-        dl = DataLoader(train_data, batch_size, shuffle = True)
+        dl = DataLoader(train_data, batch_size, shuffle = True, num_wokers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
     def celeba(self, path = './datasets', batch_size : int = 16):
@@ -74,11 +76,11 @@ class DataGenerator():
             Resize(128),
             Lambda(lambda x: (x - 0.5) * 2)
             ]))
-        dl = DataLoader(train_data, batch_size, shuffle = True)
+        dl = DataLoader(train_data, batch_size, shuffle = True, num_wokers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
     def composite(self, path, text_path, batch_size : int = 16):
-        return DataLoader(CompositeDataset(path, text_path), batch_size=batch_size)
+        return DataLoader(CompositeDataset(path, text_path), batch_size=batch_size, num_wokers=self.num_workers, pin_memory=self.pin_memory)
 
     def random_data(self, size, batch_size : int = 4):
         train_data = torch.randn(size)
