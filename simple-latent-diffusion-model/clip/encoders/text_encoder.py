@@ -5,7 +5,7 @@ class TextEncoder(nn.Module):
     def __init__(self, number_of_features: int, number_of_heads: int, number_of_transformer_layers: int,
                  context_length, embed_dim):
         super().__init__()
-        self.vocab_size = 32000  # AutoTokenizer: klue/bert-base 
+        self.vocab_size = 32000  # AutoTokenizer: "koclip/koclip-base-pt"
         self.token_embedding = nn.Embedding(self.vocab_size, number_of_features)
         self.positional_embedding = nn.Parameter(torch.zeros(context_length, number_of_features))
         self.transformer = nn.TransformerEncoder(
