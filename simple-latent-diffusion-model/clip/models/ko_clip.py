@@ -20,7 +20,7 @@ class KoCLIPWrapper(nn.Module):
                 param.requires_grad = False
         
     def loss(self, image, text):
-        image_features, text_features = self(image, text, tokenize=False)
+        image_features, text_features = self(image, text, tokenize=True)
 
         # Normalize features
         image_features = F.normalize(image_features, dim=1)
@@ -45,7 +45,7 @@ class KoCLIPWrapper(nn.Module):
         return self.model.get_text_features(tokens)
     
     def forward(self, image, text, tokenize=True):
-        if tokenize==False:
+        if tokenize==True:
             if isinstance(text, torch.Tensor): # Check if text is already tokenized
               text = self.tokenizer.batch_decode(text, skip_special_tokens=True) # use batch decode!
         inputs = self.processor(

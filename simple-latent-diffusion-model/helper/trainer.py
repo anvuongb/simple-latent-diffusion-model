@@ -58,9 +58,9 @@ class Trainer():
                         x, y = batch[0].to(self.accelerator.device), batch[1].to(self.accelerator.device)
 
                     if no_label:
-                        loss = self.loss_fn(x0=x)
+                        loss = self.loss_fn(x)
                     else:
-                        loss = self.loss_fn(x0=x, y=y)
+                        loss = self.loss_fn(x, y=y)
 
                     loss = loss / self.accumulation_steps   # Normalize the loss
                     self.accelerator.backward(loss)
