@@ -9,7 +9,6 @@ class KoCLIPWrapper(nn.Module):
         self.model_name = "Bingsu/clip-vit-large-patch14-ko"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.model = AutoModel.from_pretrained(self.model_name)
-        self.logit_scale = nn.Parameter(torch.ones([]) * 4.6052)
         
     def loss(self, inputs):
         outputs = self(inputs)
