@@ -2,7 +2,7 @@ from clip.models.clip import CLIP
 from clip.models.ko_clip import KoCLIPWrapper
 from helper.trainer import Trainer
 from torch.utils.data import DataLoader, Dataset, TensorDataset
-#from helper.data_generator import DataGenerator
+from helper.data_generator import DataGenerator
 import torch
 
 class ImageTextDataset(Dataset):
@@ -33,7 +33,7 @@ class ImageTextDataset(Dataset):
 if __name__ == "__main__":
     #clip = CLIP('./configs/composite_clip_config.yaml')
     clip = KoCLIPWrapper()
-    #dg = DataGenerator()
+    dg = DataGenerator()
     num_samples = 10
     images = torch.randn(10, 3, 32, 32)
     text_prompts = [f"A photo of dummy object {i}" for i in range(num_samples)]

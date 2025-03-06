@@ -6,6 +6,7 @@ import torch
 import json
 from PIL import Image as im
 from helper.tokenizer import Tokenizer
+from transformers import AutoProcessor
 
 class UnlabelDataset(Dataset):
     def __init__(self, path, transform):
