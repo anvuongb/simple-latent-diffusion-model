@@ -7,6 +7,23 @@ import json
 from PIL import Image as im
 from helper.tokenizer import Tokenizer
 from transformers import AutoProcessor
+import matplotlib.pyplot as plt
+
+def center_crop_and_resize(img, crop_size, resize_size):
+    width, height = img.size
+
+    # 1. Center Crop
+    left = (width - crop_size) / 2
+    top = (height - crop_size) / 2
+    right = (width + crop_size) / 2
+    bottom = (height + crop_size) / 2
+
+    img_cropped = img.crop((left, top, right, bottom))
+
+    # 2. Resize
+    img_resized = img_cropped.resize((resize_size, resize_size), im.Resampling.BICUBIC)
+
+    return img_resized
 
 class UnlabelDataset(Dataset):
     def __init__(self, path, transform):
@@ -54,6 +71,7 @@ class CompositeDataset(Dataset):
         image = im.open(img_path)
         text = self.get_text(text_path)
         if self.processor is not None:
+            image = center_crop_and_resize(image, 400, 256)
             inputs = self.processor(
                 text=text,
                 images=image, 
