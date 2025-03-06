@@ -56,7 +56,7 @@ class Trainer():
                             x = batch.to(self.accelerator.device)
                     else:
                         x, y = batch[0].to(self.accelerator.device), batch[1].to(self.accelerator.device)
-
+                    
                     if no_label:
                         loss = self.loss_fn(x)
                     else:
