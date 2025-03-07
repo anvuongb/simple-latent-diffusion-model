@@ -72,7 +72,7 @@ class Trainer():
                     self.accelerator.backward(loss)
 
                     # Gradient Clipping:
-                    if self.max_grad_norm is not None and accelerator.sync_gradients:
+                    if self.max_grad_norm is not None and self.accelerator.sync_gradients:
                         self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
 
                     # Only step optimizer and scheduler when we have accumulated enough
