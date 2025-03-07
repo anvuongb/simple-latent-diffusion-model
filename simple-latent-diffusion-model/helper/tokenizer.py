@@ -6,4 +6,4 @@ class Tokenizer:
         self.vocab_size = self.tokenizer.vocab_size
         
     def tokenize(self, text):
-        return self.tokenizer(text, padding='max_length', max_length=77, truncation=True, return_tensors='pt')['input_ids']
+        return self.tokenizer(text, padding='max_length', max_length=77, truncation=True, return_tensors='pt')

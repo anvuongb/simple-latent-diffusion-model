@@ -16,11 +16,11 @@ class KoCLIPWrapper(nn.Module):
 
     def text_encode(self, text, tokenize):
         if tokenize:
-            tokens = self.tokenizer(text, padding='max_length', max_length=77, truncation=True, return_tensors="pt")['input_ids']
+            tokens = self.tokenizer(text, padding='max_length', max_length=77, truncation=True, return_tensors="pt")
         else:
             tokens = text
         tokens = tokens.to(self.model.device)
-        return self.model.get_text_features(tokens)
+        return self.model.get_text_features(**tokens)
     
     def forward(self, inputs):
         outputs = self.model(**inputs, return_loss=True)
