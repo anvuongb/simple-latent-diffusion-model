@@ -18,7 +18,7 @@ class Trainer():
                  best_loss = float("inf"),
                  accumulation_steps: int = 1,
                  max_grad_norm: float = 1.0):
-        self.accelerator = Accelerator(mixed_precision = 'fp16')
+        self.accelerator = Accelerator(mixed_precision = 'fp16', gradient_accumulation_steps=accumulation_steps)
         self.model = model.to(self.accelerator.device)
         if ema is None:
             self.ema = EMA(self.model).to(self.accelerator.device)            
@@ -53,7 +53,6 @@ class Trainer():
             progress_bar = tqdm(data_loader, leave=False, desc=f"Epoch {epoch}/{epochs}", colour="#005500", disable = not self.accelerator.is_local_main_process)
             for step, batch in enumerate(progress_bar):
                 with self.accelerator.accumulate(self.model):  # Context manager for accumulation
-                    self.optimizer.zero_grad()
                     if no_label:
                         if isinstance(batch, list):
                             x = batch[0].to(self.accelerator.device)
@@ -67,18 +66,18 @@ class Trainer():
                     else:
                         loss = self.loss_fn(x, y=y)
 
-                    loss = loss / self.accumulation_steps   # Normalize the loss
+                    # Normalize the loss
                     self.accelerator.backward(loss)
 
                     # Gradient Clipping:
                     if self.max_grad_norm is not None:
                         self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
 
-                if (step + 1) % self.accumulation_steps == 0 or (step + 1 == len(data_loader)):
-                        # Only step optimizer and scheduler when we have accumulated enough
+                    # Only step optimizer and scheduler when we have accumulated enough
                     self.optimizer.step()
                     self.scheduler.step()
                     self.ema.update()
+                    self.optimizer.zero_grad()
 
                     epoch_loss += loss.item() * self.accumulation_steps  # Scale back up for correct display
                     progress_bar.set_postfix(loss=epoch_loss / (min(step + 1, len(data_loader)))) # Correct progress bar update
