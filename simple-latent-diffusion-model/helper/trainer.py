@@ -81,7 +81,7 @@ class Trainer():
                     self.scheduler.step()
                     self.ema.update()
 
-                    epoch_loss += loss.item() * self.accumulation_steps  # Scale back up for correct display
+                    epoch_loss += loss.item()
                     progress_bar.set_postfix(loss=epoch_loss / (min(step + 1, len(data_loader)))) # Correct progress bar update
                 
             self.accelerator.wait_for_everyone()
