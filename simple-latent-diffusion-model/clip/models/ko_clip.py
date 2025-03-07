@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 from transformers import AutoModel, AutoTokenizer
@@ -6,7 +5,7 @@ from transformers import AutoModel, AutoTokenizer
 class KoCLIPWrapper(nn.Module):
     def __init__(self):
         super().__init__()
-        self.model_name = "Bingsu/clip-vit-large-patch14-ko"
+        self.model_name = "Bingsu/clip-vit-base-patch32-ko"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.model = AutoModel.from_pretrained(self.model_name)
         

@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer
 
 class Tokenizer:
-    def __init__(self, model_name="Bingsu/clip-vit-large-patch14-ko"):
+    def __init__(self, model_name="Bingsu/clip-vit-base-patch32-ko"):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.vocab_size = self.tokenizer.vocab_size
         

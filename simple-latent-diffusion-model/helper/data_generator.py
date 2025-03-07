@@ -7,7 +7,6 @@ import json
 from PIL import Image as im
 from helper.tokenizer import Tokenizer
 from transformers import AutoProcessor
-import matplotlib.pyplot as plt
 
 def center_crop_and_resize(img, crop_size, resize_size):
     width, height = img.size
@@ -53,7 +52,7 @@ class CompositeDataset(Dataset):
         self.transform = Compose([
                 ToTensor(),
                 CenterCrop(400),
-                Resize(256, antialias=None),
+                Resize(128, antialias=None),
                 Lambda(lambda x: (x - 0.5) * 2)
             ])
         
@@ -71,7 +70,7 @@ class CompositeDataset(Dataset):
         image = im.open(img_path)
         text = self.get_text(text_path)
         if self.processor is not None:
-            image = center_crop_and_resize(image, 400, 256)
+            image = center_crop_and_resize(image, 400, 128)
             inputs = self.processor(
                 text=text,
                 images=image, 
@@ -82,13 +81,13 @@ class CompositeDataset(Dataset):
                 )
             for j in inputs:
                 inputs[j] = inputs[j].squeeze(0)
-            
             return inputs
         else:
             image = self.transform(image)
             text = self.tokenizer.tokenize(text)
             for j in text:
                 text[j] = text[j].squeeze(0)
+            print(text)
             return image, text
 
 class DataGenerator():
@@ -118,8 +117,8 @@ class DataGenerator():
     def composite(self, path, text_path, batch_size : int = 16, is_process: bool = False):
         processor = None
         if is_process:
-            model_name = "Bingsu/clip-vit-large-patch14-ko"
-            processor = AutoProcessor.from_pretrained(model_name)
+            model_name = "Bingsu/clip-vit-base-patch32-ko"
+            processor = AutoProcessor.from_pretrained(model_name, use_fast=False)
         dataset = CompositeDataset(path, text_path, processor)
         return DataLoader(dataset, batch_size=batch_size, num_workers=self.num_workers, pin_memory=self.pin_memory)
 
