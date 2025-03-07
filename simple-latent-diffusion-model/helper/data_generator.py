@@ -87,6 +87,8 @@ class CompositeDataset(Dataset):
         else:
             image = self.transform(image)
             text = self.tokenizer.tokenize(text)
+            for j in text:
+                text[j] = text[j].squeeze(0)
             return image, text
 
 class DataGenerator():
