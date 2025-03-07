@@ -74,11 +74,11 @@ class Trainer():
                     if self.max_grad_norm is not None:
                         self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
 
-                    if (step + 1) % self.accumulation_steps == 0 or (step + 1 == len(data_loader)):
-                         # Only step optimizer and scheduler when we have accumulated enough
-                        self.optimizer.step()
-                        self.scheduler.step()
-                        self.ema.update()
+                if (step + 1) % self.accumulation_steps == 0 or (step + 1 == len(data_loader)):
+                        # Only step optimizer and scheduler when we have accumulated enough
+                    self.optimizer.step()
+                    self.scheduler.step()
+                    self.ema.update()
 
                     epoch_loss += loss.item() * self.accumulation_steps  # Scale back up for correct display
                     progress_bar.set_postfix(loss=epoch_loss / (min(step + 1, len(data_loader)))) # Correct progress bar update
