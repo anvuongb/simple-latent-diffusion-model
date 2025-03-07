@@ -28,7 +28,6 @@ class Trainer():
         self.optimizer = optimizer
         if self.optimizer is None:
             self.optimizer = torch.optim.AdamW(self.model.parameters(), lr = 1e-4)
-        self.optimizer.zero_grad()
         self.scheduler = scheduler
         self.start_epoch = start_epoch
         self.best_loss = best_loss
