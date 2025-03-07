@@ -29,7 +29,7 @@ if __name__ == '__main__':
     #trainer.train(data_loader, 1000, VAE_FILE_NAME, True)
     
     clip = KoCLIPWrapper()
-    cond_encoder = CLIPEncoder(clip)
+    cond_encoder = CLIPEncoder(clip, CONFIG_PATH)
     #cond_encoder = ConditionEncoder(CONFIG_PATH)
     network = UnetWrapper(Unet, CONFIG_PATH, cond_encoder)
     dm = LatentDiffusionModel(network, sampler, vae)

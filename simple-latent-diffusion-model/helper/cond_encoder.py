@@ -7,19 +7,30 @@ from clip.models.clip import CLIP
 class CLIPEncoder(nn.Module):
     def __init__(
         self,
-        clip: CLIP
+        clip: CLIP,
+        config_path
         ):
         super().__init__()
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)['cond_encoder']
         self.clip = clip
         self.clip.eval()
         for param in self.clip.parameters():
             param.requires_grad = False
+        embed_dim = config['embed_dim']
+        cond_dim = config['cond_dim']
+        self.cond_mlp = nn.Sequential(
+            nn.Linear(embed_dim, cond_dim),
+            nn.GELU(),
+            nn.Linear(cond_dim, cond_dim)
+            )
 
     def forward(self, y):
         if isinstance(y, str):
-            return self.clip.text_encode(y, tokenize=True)
+            y = self.clip.text_encode(y, tokenize=True)
         else:
-            return self.clip.text_encode(y, tokenize=False)
+            y = self.clip.text_encode(y, tokenize=False)
+        return self.cond_mlp(y)
 
 class ConditionEncoder(nn.Module):
     def __init__(

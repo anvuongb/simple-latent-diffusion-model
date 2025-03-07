@@ -27,7 +27,11 @@ sampler:
     sampling_T: 50
     eta: 1
 
+cond_encoder:
+    embed_dim: 768
+    cond_dim: 384
+
 unet:
     dim: 96
     dim_mults: [1, 2, 4, 8]
-    cond_dim: 768
+    cond_dim: 384
