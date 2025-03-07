@@ -91,7 +91,6 @@ class Trainer():
                         "scheduler_state_dict": self.scheduler.state_dict(),
                         "epoch": epoch,
                         "training_steps": epoch * len(dl),
-                        "total_steps": total_steps,
                         "best_loss": self.best_loss,
                         "batch_size": dl.batch_size,
                         "number_of_batches": len(dl)
