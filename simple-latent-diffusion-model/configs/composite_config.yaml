@@ -28,7 +28,7 @@ sampler:
     eta: 1
 
 cond_encoder:
-    embed_dim: 768
+    embed_dim: 512
     cond_dim: 384
 
 unet:

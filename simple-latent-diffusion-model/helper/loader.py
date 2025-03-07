@@ -40,14 +40,7 @@ class Loader():
         ema.train()
         optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-4)
         optimizer.load_state_dict(check_point["optimizer_state_dict"])
-        total_steps = check_point["total_steps"]
-        scheduler = get_cosine_schedule_with_warmup(
-            optimizer,
-            num_warmup_steps=int(0.1 * total_steps), # 10% warmup
-            num_training_steps=total_steps
-            )
-        scheduler.load_state_dict(check_point["scheduler_state_dict"])
         epoch = check_point["epoch"]
         loss = check_point["best_loss"]
-        print("===Model/EMA/Optimizer/Scheduler/Epoch/Loss loaded!===")
-        return model, ema, optimizer, scheduler, epoch, loss
+        print("===Model/EMA/Optimizer/Epoch/Loss loaded!===")
+        return model, ema, optimizer, epoch, loss

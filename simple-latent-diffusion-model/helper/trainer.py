@@ -5,7 +5,6 @@ from accelerate import Accelerator
 from tqdm import tqdm
 from typing import Callable
 from helper.ema import EMA
-from transformers import get_cosine_schedule_with_warmup
 
 class Trainer():
     def __init__(self,
@@ -29,20 +28,16 @@ class Trainer():
         if self.optimizer is None:
             self.optimizer = torch.optim.AdamW(self.model.parameters(), lr = 1e-4)
         self.scheduler = scheduler
+        if self.scheduler is None:
+            self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+                self.optimizer
+            )
         self.start_epoch = start_epoch
         self.best_loss = best_loss
         self.accumulation_steps = accumulation_steps
         self.max_grad_norm = max_grad_norm
             
     def train(self, dl : DataLoader, epochs: int, file_name : str, no_label : bool = False):
-        total_steps = len(dl) * epochs // self.accumulation_steps
-        if self.scheduler is None:
-            self.scheduler = get_cosine_schedule_with_warmup(
-                self.optimizer,
-                num_warmup_steps=int(0.1 * total_steps), # 10% warmup
-                num_training_steps=total_steps
-            )
-
         self.model.train()
         self.model, self.optimizer, data_loader, self.scheduler = self.accelerator.prepare(
             self.model, self.optimizer, dl, self.scheduler
@@ -61,7 +56,6 @@ class Trainer():
                     else:
                         x, y = batch[0].to(self.accelerator.device), batch[1].to(self.accelerator.device)
                     
-
                     with self.accelerator.autocast():
                         if no_label:
                             loss = self.loss_fn(x)
@@ -76,10 +70,9 @@ class Trainer():
                         self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
 
                     # Only step optimizer and scheduler when we have accumulated enough
-                    self.optimizer.zero_grad()
                     self.optimizer.step()
-                    self.scheduler.step()
                     self.ema.update()
+                    self.optimizer.zero_grad()
 
                     epoch_loss += loss.item()
                     progress_bar.set_postfix(loss=epoch_loss / (min(step + 1, len(data_loader)))) # Correct progress bar update
