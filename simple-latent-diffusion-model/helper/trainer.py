@@ -61,23 +61,25 @@ class Trainer():
                     else:
                         x, y = batch[0].to(self.accelerator.device), batch[1].to(self.accelerator.device)
                     
-                    if no_label:
-                        loss = self.loss_fn(x)
-                    else:
-                        loss = self.loss_fn(x, y=y)
+
+                    with self.accelerator.autocast():
+                        if no_label:
+                            loss = self.loss_fn(x)
+                        else:
+                            loss = self.loss_fn(x, y=y)
 
                     # Normalize the loss
                     self.accelerator.backward(loss)
 
                     # Gradient Clipping:
-                    if self.max_grad_norm is not None:
+                    if self.max_grad_norm is not None and accelerator.sync_gradients:
                         self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
 
                     # Only step optimizer and scheduler when we have accumulated enough
+                    self.optimizer.zero_grad()
                     self.optimizer.step()
                     self.scheduler.step()
                     self.ema.update()
-                    self.optimizer.zero_grad()
 
                     epoch_loss += loss.item() * self.accumulation_steps  # Scale back up for correct display
                     progress_bar.set_postfix(loss=epoch_loss / (min(step + 1, len(data_loader)))) # Correct progress bar update
