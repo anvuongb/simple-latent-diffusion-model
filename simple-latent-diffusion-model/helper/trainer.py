@@ -53,6 +53,7 @@ class Trainer():
             progress_bar = tqdm(data_loader, leave=False, desc=f"Epoch {epoch}/{epochs}", colour="#005500", disable = not self.accelerator.is_local_main_process)
             for step, batch in enumerate(progress_bar):
                 with self.accelerator.accumulate(self.model):  # Context manager for accumulation
+                    self.optimizer.zero_grad()
                     if no_label:
                         if isinstance(batch, list):
                             x = batch[0].to(self.accelerator.device)
@@ -77,7 +78,6 @@ class Trainer():
                          # Only step optimizer and scheduler when we have accumulated enough
                         self.optimizer.step()
                         self.scheduler.step()
-                        self.optimizer.zero_grad()
                         self.ema.update()
 
                     epoch_loss += loss.item() * self.accumulation_steps  # Scale back up for correct display
