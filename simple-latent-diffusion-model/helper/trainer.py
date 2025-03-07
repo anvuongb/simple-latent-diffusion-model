@@ -5,6 +5,7 @@ from accelerate import Accelerator
 from tqdm import tqdm
 from typing import Callable
 from helper.ema import EMA
+from transformers import get_cosine_schedule_with_warmup
 
 class Trainer():
     def __init__(self,
@@ -17,7 +18,7 @@ class Trainer():
                  best_loss = float("inf"),
                  accumulation_steps: int = 1,
                  max_grad_norm: float = 1.0):
-        self.accelerator = Accelerator(mixed_precision = 'no')
+        self.accelerator = Accelerator(mixed_precision = 'fp16')
         self.model = model 
         if ema is None:
             self.ema = EMA(self.model).to(self.accelerator.device)            
@@ -26,19 +27,23 @@ class Trainer():
         self.loss_fn = loss_fn
         self.optimizer = optimizer
         if self.optimizer is None:
-            self.optimizer = torch.optim.Adam(self.model.parameters(), lr = 1e-4)
+            self.optimizer = torch.optim.AdamW(self.model.parameters(), lr = 1e-4)
         self.optimizer.zero_grad()
         self.scheduler = scheduler
-        if self.scheduler is None:
-            self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-                self.optimizer, min_lr=1e-6
-            )
         self.start_epoch = start_epoch
         self.best_loss = best_loss
         self.accumulation_steps = accumulation_steps
         self.max_grad_norm = max_grad_norm
             
-    def train(self, dl : DataLoader, epochs : int, file_name : str, no_label : bool = False):
+    def train(self, dl : DataLoader, epochs: int, file_name : str, no_label : bool = False):
+        total_steps = len(dl) * epochs // self.accumulation_steps
+        if self.scheduler is None:
+            self.scheduler = get_cosine_schedule_with_warmup(
+                self.optimizer,
+                num_warmup_steps=int(0.1 * total_steps), # 10% warmup
+                num_training_steps=total_steps
+            )
+
         self.model.train()
         self.model, self.optimizer, data_loader, self.scheduler = self.accelerator.prepare(
             self.model, self.optimizer, dl, self.scheduler
@@ -72,6 +77,7 @@ class Trainer():
                     if (step + 1) % self.accumulation_steps == 0 or (step + 1 == len(data_loader)):
                          # Only step optimizer and scheduler when we have accumulated enough
                         self.optimizer.step()
+                        self.scheduler.step()
                         self.optimizer.zero_grad()
                         self.ema.update()
 
@@ -89,8 +95,10 @@ class Trainer():
                         "model_state_dict": self.accelerator.get_state_dict(self.model),
                         "ema_state_dict": self.ema.state_dict(),
                         "optimizer_state_dict": self.optimizer.state_dict(),
+                        "scheduler_state_dict": self.scheduler.state_dict(),
                         "epoch": epoch,
-                        "training_step": epoch * len(dl),
+                        "training_steps": epoch * len(dl),
+                        "total_steps": total_steps,
                         "best_loss": self.best_loss,
                         "batch_size": dl.batch_size,
                         "number_of_batches": len(dl)

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from helper.ema import EMA
+from transformers import get_cosine_schedule_with_warmup
 
 class Loader():
     def __init__(self, device = None):
@@ -8,7 +9,7 @@ class Loader():
         
     def print_model(self, check_point):
         print("Epoch: " + str(check_point["epoch"]))
-        print("Training step: " + str(check_point["training_step"]))
+        print("Training step: " + str(check_point["training_steps"]))
         print("Best loss: " + str(check_point["best_loss"]))
         print("Batch size: " + str(check_point["batch_size"]))
         print("Number of batches: " + str(check_point["number_of_batches"]))
@@ -33,17 +34,20 @@ class Loader():
                                  weights_only=True)
         if print_dict: self.print_model(check_point)
         model.load_state_dict(check_point['model_state_dict'])
-        for param in model.parameters():
-            param.requires_grad_(True)
         model.train()
         ema = EMA(model)
         ema.load_state_dict(check_point['ema_state_dict'])
-        for param in ema.parameters():
-            param.requires_grad_(True)
         ema.train()
-        optimizer = torch.optim.Adam(model.parameters(), lr = 1e-4)
+        optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-4)
         optimizer.load_state_dict(check_point["optimizer_state_dict"])
+        total_steps = check_point["total_steps"]
+        scheduler = get_cosine_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=int(0.1 * total_steps), # 10% warmup
+            num_training_steps=total_steps
+            )
+        scheduler.load_state_dict(check_point["scheduler_state_dict"])
         epoch = check_point["epoch"]
         loss = check_point["best_loss"]
-        print("===Model/EMA/Optimizer/Epoch/Loss loaded!===")
-        return model, ema, optimizer, epoch, loss
+        print("===Model/EMA/Optimizer/Scheduler/Epoch/Loss loaded!===")
+        return model, ema, optimizer, scheduler, epoch, loss
