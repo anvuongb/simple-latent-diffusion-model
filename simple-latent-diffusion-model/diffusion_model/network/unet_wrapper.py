@@ -28,7 +28,6 @@ class UnetWrapper(nn.Module):
                 y = self.cond_encoder(y).squeeze()
             if y.size(0) != x.size(0):
                 y = y.repeat(x.size(0), 1)
-            print(y.shape)
             return self.network(x, t, y)
         else: 
             return self.network(x, t)

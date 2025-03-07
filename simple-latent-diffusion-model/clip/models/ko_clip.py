@@ -23,4 +23,4 @@ class KoCLIPWrapper(nn.Module):
     
     def forward(self, inputs):
         outputs = self.model(**inputs, return_loss=True)
-        return outputs  # [1, 512], [1, 512]
+        return outputs # [1, 512] , [1, 512]
