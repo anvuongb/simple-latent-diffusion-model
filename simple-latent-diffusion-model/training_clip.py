@@ -6,7 +6,7 @@ import torch
 if __name__ == "__main__":
     clip = KoCLIPWrapper()
     dg = DataGenerator(num_workers = 0, pin_memory = False)
-    data_loader = dg.composite('./datasets/images/', './datasets/labels/', is_process=True)
+    data_loader = dg.composite('./datasets/images/', './datasets/labels/', is_process=False)
     
     trainer = Trainer(clip, clip.loss, accumulation_steps = 2)
     trainer.train(data_loader, 100, 'composite_clip', no_label = True)
