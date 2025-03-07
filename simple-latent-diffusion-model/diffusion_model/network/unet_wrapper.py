@@ -19,7 +19,7 @@ class UnetWrapper(nn.Module):
             t = x.new_full((x.size(0), ), t, dtype = torch.int, device = x.device)
         if y is not None:
             assert self.cond_encoder is not None, 'You need to set ConditionalEncoder for conditional sampling.'
-            if isinstance(y, str):
+            if isinstance(y, str) or isinstance(y, dict):
                 y = self.cond_encoder(y).to(x.device)
             else:
                 if torch.is_tensor(y) == False:
