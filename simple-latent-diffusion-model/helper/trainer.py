@@ -19,7 +19,7 @@ class Trainer():
                  accumulation_steps: int = 1,
                  max_grad_norm: float = 1.0):
         self.accelerator = Accelerator(mixed_precision = 'fp16')
-        self.model = model 
+        self.model = model.to(self.accelerator.device)
         if ema is None:
             self.ema = EMA(self.model).to(self.accelerator.device)            
         else:
@@ -55,7 +55,7 @@ class Trainer():
             for step, batch in enumerate(progress_bar):
                 with self.accelerator.accumulate(self.model):  # Context manager for accumulation
                     if no_label:
-                        if type(batch) == list:
+                        if isinstance(batch, list):
                             x = batch[0].to(self.accelerator.device)
                         else:
                             x = batch.to(self.accelerator.device)
