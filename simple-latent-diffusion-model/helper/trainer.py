@@ -29,9 +29,7 @@ class Trainer():
             self.optimizer = torch.optim.AdamW(self.model.parameters(), lr = 1e-4)
         self.scheduler = scheduler
         if self.scheduler is None:
-            self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-                self.optimizer
-            )
+            self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer)
         self.start_epoch = start_epoch
         self.best_loss = best_loss
         self.accumulation_steps = accumulation_steps

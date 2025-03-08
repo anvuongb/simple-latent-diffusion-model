@@ -40,7 +40,9 @@ class Loader():
         ema.train()
         optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-4)
         optimizer.load_state_dict(check_point["optimizer_state_dict"])
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer)
+        scheduler.load_state_dict(check_point["scheduler_state_dict"])
         epoch = check_point["epoch"]
         loss = check_point["best_loss"]
-        print("===Model/EMA/Optimizer/Epoch/Loss loaded!===")
-        return model, ema, optimizer, epoch, loss
+        print("===Model/EMA/Optimizer/Scheduler/Epoch/Loss loaded!===")
+        return model, ema, optimizer, scheduler, epoch, loss
