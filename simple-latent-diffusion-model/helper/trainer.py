@@ -79,7 +79,21 @@ class Trainer():
             if self.accelerator.is_main_process:
                 epoch_loss = epoch_loss / len(progress_bar)
                 self.scheduler.step(epoch_loss)
+                # Save the latest model
+                torch.save({
+                    "model_state_dict": self.accelerator.get_state_dict(self.model),
+                    "ema_state_dict": self.ema.state_dict(),
+                    "optimizer_state_dict": self.optimizer.state_dict(),
+                    "scheduler_state_dict": self.scheduler.state_dict(),
+                    "epoch": epoch,
+                    "training_steps": epoch * len(dl),
+                    "best_loss": self.best_loss,
+                    "batch_size": dl.batch_size,
+                    "number_of_batches": len(dl)
+                    }, file_name + 'latest.pth')
                 log_string = f"Loss at epoch {epoch}: {epoch_loss :.4f}"
+
+                # Save the best model
                 if self.best_loss > epoch_loss:
                     self.best_loss = epoch_loss
                     torch.save({
@@ -92,6 +106,6 @@ class Trainer():
                         "best_loss": self.best_loss,
                         "batch_size": dl.batch_size,
                         "number_of_batches": len(dl)
-                        }, file_name + '.pth')
+                        }, file_name + 'best.pth')
                     log_string += " --> Best model ever (stored)"
                 print(log_string)
