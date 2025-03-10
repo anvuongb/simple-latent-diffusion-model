@@ -90,7 +90,7 @@ class Trainer():
                     "best_loss": self.best_loss,
                     "batch_size": dl.batch_size,
                     "number_of_batches": len(dl)
-                    }, file_name + 'latest.pth')
+                    }, file_name + '-latest.pth')
                 log_string = f"Loss at epoch {epoch}: {epoch_loss :.4f}"
 
                 # Save the best model
@@ -106,6 +106,6 @@ class Trainer():
                         "best_loss": self.best_loss,
                         "batch_size": dl.batch_size,
                         "number_of_batches": len(dl)
-                        }, file_name + 'best.pth')
+                        }, file_name + '-best.pth')
                     log_string += " --> Best model ever (stored)"
                 print(log_string)
