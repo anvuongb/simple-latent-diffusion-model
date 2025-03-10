@@ -31,7 +31,7 @@ class BetaGenerator():
         betas = 1 - (alphas_cumprod[1:] / alphas_cumprod[:-1])
         return torch.clip(betas, 0, 0.999)
 
-    def sigmoid_beta_schedule(self, start = -3, end = 3, tau = 1, clamp_min = 1e-5):
+    def sigmoid_beta_schedule(self, start = -3, end = 3, tau = 1):
         """
         sigmoid schedule
         proposed in https://arxiv.org/abs/2212.11972 - Figure 8

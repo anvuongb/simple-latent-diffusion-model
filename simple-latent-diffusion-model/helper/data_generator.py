@@ -1,6 +1,6 @@
 from torchvision.datasets import CIFAR10, CelebA
 from torch.utils.data import DataLoader, Dataset
-from torchvision.transforms import Compose, ToTensor, Lambda, CenterCrop, Resize
+from torchvision.transforms import Compose, ToTensor, Lambda, CenterCrop, Resize, RandomHorizontalFlip
 import os
 import torch
 import json
@@ -53,6 +53,7 @@ class CompositeDataset(Dataset):
                 ToTensor(),
                 CenterCrop(400),
                 Resize(128, antialias=None),
+                RandomHorizontalFlip(),
                 Lambda(lambda x: (x - 0.5) * 2)
             ])
         
