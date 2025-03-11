@@ -22,7 +22,7 @@ vae:
     kld_weight: 1e-6
 
 sampler:
-    beta: 'sigmoid'
+    beta: 'linear'
     T: 1000
     sampling_T: 50
     eta: 1
