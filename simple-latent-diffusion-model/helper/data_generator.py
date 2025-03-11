@@ -52,7 +52,7 @@ class CompositeDataset(Dataset):
         self.transform = Compose([
                 ToTensor(),
                 CenterCrop(400),
-                Resize(128, antialias=None),
+                Resize(256, antialias=True),
                 RandomHorizontalFlip(),
                 Lambda(lambda x: (x - 0.5) * 2)
             ])
@@ -71,7 +71,7 @@ class CompositeDataset(Dataset):
         image = im.open(img_path)
         text = self.get_text(text_path)
         if self.processor is not None:
-            image = center_crop_and_resize(image, 400, 128)
+            image = center_crop_and_resize(image, 400, 256)
             inputs = self.processor(
                 text=text,
                 images=image, 
