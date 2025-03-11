@@ -120,7 +120,8 @@ class DataGenerator():
             model_name = "Bingsu/clip-vit-base-patch32-ko"
             processor = AutoProcessor.from_pretrained(model_name, use_fast=False)
         dataset = CompositeDataset(path, text_path, processor)
-        return DataLoader(dataset, batch_size=batch_size, num_workers=self.num_workers, pin_memory=self.pin_memory)
+        return DataLoader(dataset, batch_size=batch_size, shuffle=True,
+                          num_workers=self.num_workers, pin_memory=self.pin_memory)
 
     def random_data(self, size, batch_size : int = 4):
         train_data = torch.randn(size)

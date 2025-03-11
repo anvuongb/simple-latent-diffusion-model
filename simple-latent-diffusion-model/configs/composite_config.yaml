@@ -29,9 +29,9 @@ sampler:
 
 cond_encoder:
     embed_dim: 512
-    cond_dim: 384
+    cond_dim: 768
 
 unet:
     dim: 192
     dim_mults: [1, 2, 4, 8]
-    cond_dim: 384
+    cond_dim: 768
