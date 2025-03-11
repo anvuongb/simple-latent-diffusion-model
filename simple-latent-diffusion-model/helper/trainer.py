@@ -29,7 +29,7 @@ class Trainer():
             self.optimizer = torch.optim.AdamW(self.model.parameters(), lr = 1e-4)
         self.scheduler = scheduler
         if self.scheduler is None:
-            self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer)
+            self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=100)
         self.start_epoch = start_epoch
         self.best_loss = best_loss
         self.accumulation_steps = accumulation_steps
@@ -65,6 +65,7 @@ class Trainer():
 
                     # Gradient Clipping:
                     if self.max_grad_norm is not None and self.accelerator.sync_gradients:
+                        print('asdf')
                         self.accelerator.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
 
                     # Only step optimizer and scheduler when we have accumulated enough
