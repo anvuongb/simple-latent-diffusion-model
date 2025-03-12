@@ -27,7 +27,7 @@ class BaseCondEncoder(nn.Module):
     def cond_drop(self, y: torch.tensor):
         if self.training and self.cond_drop_prob > 0.0:
             flags = torch.zeros((y.size(0), ), device=y.device).float().uniform_(0, 1) < self.cond_drop_prob
-            y[flags] = self.null_embedding
+            y[flags] = self.null_embedding.to(y.dtype)
         return y
 
 class CLIPEncoder(BaseCondEncoder):
