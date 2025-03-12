@@ -27,7 +27,7 @@ class LatentDiffusionModel(DiffusionModel) :
     # Therefore, sample() should be used for sampling data, not latents
     @torch.no_grad()
     def sample(self, n_samples: int = 4, gamma = None, **kwargs):
-        sample = self(n_samples, gamma, **kwargs)
+        sample = self(n_samples, gamma=gamma, **kwargs)
         return self.auto_encoder.decode(sample)
     
     @torch.no_grad()

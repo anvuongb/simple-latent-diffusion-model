@@ -40,7 +40,7 @@ if __name__ == '__main__':
     #dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     
     #sample = dm(2)
-    sample = dm.sample(2, y = ['..'])
+    sample = dm.sample(2, y = '..', gamma = 2)
     painter.show_images(sample)
     
     
