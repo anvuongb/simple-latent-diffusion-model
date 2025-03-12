@@ -56,8 +56,11 @@ class BaseSampler(nn.Module, ABC):
             return x_seq
         
     @torch.no_grad()
-    def p_sample(self, x, t, idx, **kwargs):
+    def p_sample(self, x, t, idx, gamma = None, **kwargs):
         eps_hat = self.network(x = x, t = t, **kwargs)
+        if gamma is not None:
+            eps_null = self.network(x = x, t = t, cond_drop_all=True, **kwargs)
+            eps_hat = gamma * eps_hat + (1 - gamma) * eps_null
         x = self.get_x_prev(x, idx, eps_hat)
         return x
 

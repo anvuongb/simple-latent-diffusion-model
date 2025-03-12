@@ -26,12 +26,12 @@ class LatentDiffusionModel(DiffusionModel) :
     # The forward function outputs the generated latents
     # Therefore, sample() should be used for sampling data, not latents
     @torch.no_grad()
-    def sample(self, n_samples: int = 4, **kwargs):
-        sample = self(n_samples, **kwargs)
+    def sample(self, n_samples: int = 4, gamma = None, **kwargs):
+        sample = self(n_samples, gamma, **kwargs)
         return self.auto_encoder.decode(sample)
     
     @torch.no_grad()
-    def generate_sequence(self, n_samples: int = 4, **kwargs):
-        sequence = self(n_samples, only_last=False, **kwargs)
+    def generate_sequence(self, n_samples: int = 4, gamma = None, **kwargs):
+        sequence = self(n_samples, only_last=False, gamma = gamma, **kwargs)
         sample = self.auto_encoder.decode(sequence[-1])
         return sequence, sample

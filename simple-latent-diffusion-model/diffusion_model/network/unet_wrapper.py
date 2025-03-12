@@ -14,18 +14,17 @@ class UnetWrapper(nn.Module):
         # ConditionalEncoder
         self.add_module('cond_encoder', cond_encoder)
         
-    def forward(self, x, t, y=None):
+    def forward(self, x, t, y=None, cond_drop_all:bool = False):
         if t.dim() == 0:
             t = x.new_full((x.size(0), ), t, dtype = torch.int, device = x.device)
         if y is not None:
             assert self.cond_encoder is not None, 'You need to set ConditionalEncoder for conditional sampling.'
-            # Null embedding
             if isinstance(y, str) or isinstance(y, transformers.tokenization_utils_base.BatchEncoding):
-                y = self.cond_encoder(y).to(x.device)
+                y = self.cond_encoder(y, cond_drop_all=cond_drop_all).to(x.device)
             else:
                 if torch.is_tensor(y) == False:
                     y = torch.tensor([y], device=x.device)
-                y = self.cond_encoder(y).squeeze()
+                y = self.cond_encoder(y, cond_drop_all=cond_drop_all).squeeze()
             if y.size(0) != x.size(0):
                 y = y.repeat(x.size(0), 1)
             return self.network(x, t, y)

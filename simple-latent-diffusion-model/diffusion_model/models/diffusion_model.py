@@ -34,9 +34,9 @@ class DiffusionModel(nn.Module) :
         return self.weighted_loss(t, eps, eps_hat)
             
     @torch.no_grad()
-    def forward(self, n_samples: int = 4, only_last: bool = True, **kwargs):
+    def forward(self, n_samples: int = 4, only_last: bool = True, gamma = None, **kwargs):
         """
         If only_last is False, the outputs will be the sequnece of the generated points
         """
         x_T = torch.randn(n_samples, *self.image_shape, device = next(self.buffers(), None).device)
-        return self.sampler(x_T = x_T, only_last=only_last, **kwargs)
+        return self.sampler(x_T = x_T, only_last=only_last, gamma = gamma, **kwargs)

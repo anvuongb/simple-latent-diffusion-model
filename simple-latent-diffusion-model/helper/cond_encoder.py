@@ -42,12 +42,14 @@ class CLIPEncoder(BaseCondEncoder):
         for param in self.clip.parameters():
             param.requires_grad = False
 
-    def forward(self, y):
+    def forward(self, y, cond_drop_all:bool = False):
         if isinstance(y, str):
             y = self.clip.text_encode(y, tokenize=True)
         else:
             y = self.clip.text_encode(y, tokenize=False)
-        y = self.cond_drop(y)
+        y = self.cond_drop(y) # Only training
+        if cond_drop_all:
+            y[:] = self.null_embedding
         return self.cond_mlp(y)
 
 class ClassEncoder(BaseCondEncoder):
@@ -59,7 +61,9 @@ class ClassEncoder(BaseCondEncoder):
         self.num_cond = self.config['num_cond']
         self.embed = nn.Embedding(self.num_cond, self.embed_dim)
 
-    def forward(self, y: torch.tensor):
+    def forward(self, y, cond_drop_all:bool = False):
         y = self.embed(y)
-        y = self.cond_drop(y)
+        y = self.cond_drop(y) # Only training
+        if cond_drop_all:
+            y[:] = self.null_embedding
         return self.cond_mlp(y)
