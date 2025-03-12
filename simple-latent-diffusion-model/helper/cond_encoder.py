@@ -2,60 +2,64 @@ import torch
 import torch.nn as nn
 import yaml
 
-from clip.models.clip import CLIP
-
-class CLIPEncoder(nn.Module):
-    def __init__(
-        self,
-        clip: CLIP,
-        config_path
-        ):
-        super().__init__()
-        with open(config_path, "r") as file:
-            config = yaml.safe_load(file)['cond_encoder']
-        self.clip = clip
-        self.clip.eval()
-        for param in self.clip.parameters():
-            param.requires_grad = False
-        embed_dim = config['embed_dim']
-        cond_dim = config['cond_dim']
-        self.cond_mlp = nn.Sequential(
-            nn.Linear(embed_dim, cond_dim),
-            nn.GELU(),
-            nn.Linear(cond_dim, cond_dim)
-            )
-
-    def forward(self, y):
-        if isinstance(y, str):
-            y = self.clip.text_encode(y, tokenize=True)
-        else:
-            y = self.clip.text_encode(y, tokenize=False)
-        return self.cond_mlp(y)
-
-class ConditionEncoder(nn.Module):
+class BaseCondEncoder(nn.Module):
     def __init__(
         self, 
         config_path
         ):
         super().__init__()
         with open(config_path, "r") as file:
-            config = yaml.safe_load(file)['cond_encoder']
-        cond_type = config['cond_type']
-        num_cond = config['num_cond']
-        embed_dim = config['embed_dim']
-        cond_dim = config['cond_dim']
-        
-        if cond_type == 'class':
-            self.embed = nn.Embedding(num_cond, embed_dim)
-        elif cond_type == 'numeric':
-            self.embed = nn.Linear(num_cond, embed_dim)
+            self.config = yaml.safe_load(file)['cond_encoder']
+        self.embed_dim = self.config['embed_dim']
+        self.cond_dim = self.config['cond_dim']
+        if 'cond_drop_prob' in self.config:
+            self.cond_drop_prob = self.config['cond_drop_prob']
+            self.null_embedding = nn.Parameter(torch.randn(self.embed_dim))
+        else:
+            self.cond_drop_prob = 0.0
 
         self.cond_mlp = nn.Sequential(
-            self.embed,
-            nn.Linear(embed_dim, cond_dim),
+            nn.Linear(self.embed_dim, self.cond_dim),
             nn.GELU(),
-            nn.Linear(cond_dim, cond_dim)
+            nn.Linear(self.cond_dim, self.cond_dim)
             )
 
+    def cond_drop(self, y: torch.tensor):
+        if self.training and self.cond_drop_prob > 0.0:
+            flags = torch.zeros((y.size(0), ), device=y.device).float().uniform_(0, 1) < self.cond_drop_prob
+            y[flags] = self.null_embedding
+        return y
+
+class CLIPEncoder(BaseCondEncoder):
+    def __init__(
+        self,
+        clip,
+        config_path
+        ):
+        super().__init__(config_path)
+        self.clip = clip
+        self.clip.eval()
+        for param in self.clip.parameters():
+            param.requires_grad = False
+
+    def forward(self, y):
+        if isinstance(y, str):
+            y = self.clip.text_encode(y, tokenize=True)
+        else:
+            y = self.clip.text_encode(y, tokenize=False)
+        y = self.cond_drop(y)
+        return self.cond_mlp(y)
+
+class ClassEncoder(BaseCondEncoder):
+    def __init__(
+        self, 
+        config_path
+        ):
+        super().__init__(config_path)
+        self.num_cond = self.config['num_cond']
+        self.embed = nn.Embedding(self.num_cond, self.embed_dim)
+
     def forward(self, y: torch.tensor):
+        y = self.embed(y)
+        y = self.cond_drop(y)
         return self.cond_mlp(y)

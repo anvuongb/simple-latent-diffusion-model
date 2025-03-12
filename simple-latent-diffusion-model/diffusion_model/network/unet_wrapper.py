@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import yaml
-from helper.cond_encoder import ConditionEncoder
 import transformers
 
 class UnetWrapper(nn.Module):
@@ -20,6 +19,7 @@ class UnetWrapper(nn.Module):
             t = x.new_full((x.size(0), ), t, dtype = torch.int, device = x.device)
         if y is not None:
             assert self.cond_encoder is not None, 'You need to set ConditionalEncoder for conditional sampling.'
+            # Null embedding
             if isinstance(y, str) or isinstance(y, transformers.tokenization_utils_base.BatchEncoding):
                 y = self.cond_encoder(y).to(x.device)
             else:

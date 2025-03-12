@@ -28,10 +28,10 @@ sampler:
     eta: 1
 
 cond_encoder:
-    cond_type : 'class'
     num_cond : 10
-    embed_dim : 768
+    embed_dim : 512
     cond_dim : 256 # Should be the same with 'cond_dim' in unet
+    cond_drop_prob: 0.2
 
 unet:
     dim: 64

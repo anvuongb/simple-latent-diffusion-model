@@ -7,7 +7,7 @@ from diffusion_model.models.diffusion_model import DiffusionModel
 from diffusion_model.network.unet_wrapper import UnetWrapper
 from diffusion_model.network.unet import Unet
 from helper.painter import Painter
-from helper.cond_encoder import ConditionEncoder
+from helper.cond_encoder import ClassEncoder
 from helper.cond_encoder import CLIPEncoder
 from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
 from diffusion_model.sampler.ddim import DDIM
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     #dm = DiffusionModel(network, sampler, IMAGE_SHAPE)
     
     #sample = dm(2)
-    sample = dm.sample(2, y = '...')
+    sample = dm.sample(2, y = ['..'])
     painter.show_images(sample)
     
     

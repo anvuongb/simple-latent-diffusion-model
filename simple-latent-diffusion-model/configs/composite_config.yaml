@@ -22,7 +22,7 @@ vae:
     kld_weight: 1e-6
 
 sampler:
-    beta: 'linear'
+    beta: 'sigmoid'
     T: 1000
     sampling_T: 50
     eta: 1
@@ -30,6 +30,7 @@ sampler:
 cond_encoder:
     embed_dim: 512
     cond_dim: 768
+    cond_drop_prob: 0.2
 
 unet:
     dim: 192
