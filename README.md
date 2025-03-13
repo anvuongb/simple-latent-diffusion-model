@@ -17,12 +17,7 @@ The table below showcases text-to-image generation using CLIP. The dataset used 
 | **English Text** | **Generated Image** |
 |-----------------|------------------------------|
 | A round face with voluminous, slightly long short hair, along with barely visible vocal cords, gives off a more feminine aura than a masculine one. The well-defined eyes and lips enhance the subject's delicate features, making them appear more refined and intellectual. | <img src="assets/Ex1.png" width="1000"/> |
-| The hairstyle appears slightly unpolished, lacking a refined touch. The slightly upturned eyes give off a sharp and somewhat sensitive impression. Overall, they seem to have a slender physique and appear efficient in handling tasks, though their social interactions may not be particularly smooth. | <img src="assets/Ex4.png" width="1000"/> | 
-
-### Why doesn't the generated image match the input text?
-
-This is because the sampling was performed without guidance. Using classifier-free guidance (CFG) during sampling can significantly improve sample quality and enhance the performance of conditional generation.
-
+| The hairstyle appears slightly unpolished, lacking a refined touch. The slightly upturned eyes give off a sharp and somewhat sensitive impression. Overall, they seem to have a slender physique and appear efficient in handling tasks, though their social interactions may not be particularly smooth. | <img src="assets/Ex2.png" width="1000"/> | 
 
 ## **Tutorials**
 
@@ -34,19 +29,25 @@ The following example demonstrates how to use the code in this repository.
 
 ```python
 import torch
-import os
 
-from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
-from helper.data_generator import DataGenerator
 from helper.painter import Painter
 from helper.trainer import Trainer
+from helper.data_generator import DataGenerator
 from helper.loader import Loader
-from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
-from diffusion_model.network.uncond_u_net import UnconditionalUnetwork
+from helper.cond_encoder import CLIPEncoder
+
+from auto_encoder.models.variational_auto_encoder import VariationalAutoEncoder
+from clip.models.ko_clip import KoCLIPWrapper
 from diffusion_model.sampler.ddim import DDIM
+from diffusion_model.models.latent_diffusion_model import LatentDiffusionModel
+from diffusion_model.network.unet import Unet
+from diffusion_model.network.unet_wrapper import UnetWrapper
 
 # Path to the configuration file
 CONFIG_PATH = './configs/cifar10_config.yaml'
+
+# Set device
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Instantiate helper classes
 painter = Painter()
@@ -56,23 +57,31 @@ data_generator = DataGenerator()
 # Load CIFAR-10 dataset
 data_loader = data_generator.cifar10(batch_size=128)
 
+# Load CLIP model
+clip = KoCLIPWrapper() # Any CLIP model from Hugging Face
+cond_encoder = CLIPEncoder(clip, CONFIG_PATH) # Set encoder
+
 # Train the Variational Autoencoder (VAE)
 vae = VariationalAutoEncoder(CONFIG_PATH)  # Initialize the VAE model
 trainer = Trainer(vae, vae.loss)  # Create a trainer for the VAE
-trainer.train(dl=data_loader, epochs=1000, file_name='vae', no_label=True)  # Train the VAE
+trainer.train(dl=data_loader, epochs=100, file_name='vae', no_label=True)  # Train the VAE
 
 # Train the Latent Diffusion Model (LDM)
 sampler = DDIM(CONFIG_PATH)  # Initialize the DDIM sampler
-network = UnconditionalUnetwork(CONFIG_PATH)  # Initialize the U-Net network
-ldm = LatentDiffusionModel(network, sampler, vae, image_shape=(3, 32, 32))  # Initialize the LDM
+network = UnetWrapper(Unet, CONFIG_PATH, cond_encoder)  # Initialize the U-Net network
+ldm = LatentDiffusionModel(network, sampler, vae)  # Initialize the LDM
 trainer = Trainer(ldm, ldm.loss)  # Create a trainer for the LDM
-trainer.train(dl=data_loader, epochs=1000, file_name='ldm', no_label=True)  
-# Train the LDM; set 'no_label=False' if the dataset includes labels
+trainer.train(dl=data_loader, epochs=100, file_name='ldm', no_label=False)
+# Train the LDM; set 'no_label=True' if the dataset does not include labels
+
+# Load the trained models
+vae = loader.model_load('models/VAE/vae', vae, is_ema=True)
+ldm = loader.model_load('models/asian-composite-clip-ldm', ldm, is_ema=True)
 
 # Generate samples using the trained diffusion model
-ldm = LatentDiffusionModel(network, sampler, vae, image_shape=(3, 32, 32))  # Re-initialize the LDM
-loader.model_load('./diffusion_model/check_points/ldm_epoch1000', ldm, ema=True)  # Load the trained model
-sample = ldm(n_samples=4)  # Generate 4 sample images
+ldm.eval()
+ldm = ldm.to(device)
+sample = ldm(n_samples=4, y = '...', gamma = 3)  # Generate 4 sample images, 'y' represents any conditions, 'gamma' means guidance scale
 painter.show_images(sample)  # Display the generated images
 ```
 
