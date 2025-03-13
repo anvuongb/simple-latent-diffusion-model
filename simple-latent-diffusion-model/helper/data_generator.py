@@ -62,11 +62,8 @@ class CompositeDataset(Dataset):
     
     def get_text(self, text_path):
         with open(text_path, encoding = 'CP949') as f:
-            text = json.load(f)
-        gender = '남성' if text['info']['gender'] == 'M' else '여성'
-        mod_text = str(text['info']['age']) + '대 ' + gender + '입니다. '
-        mod_text += text['description']['impression']['description']
-        return mod_text
+            text = json.load(f)['description']['impression']['description']
+        return text
 
     def __getitem__(self, idx) :
         img_path = self.path + self.file_numbers[idx] + '.png'
