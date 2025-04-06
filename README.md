@@ -10,7 +10,7 @@ This repository provides a lightweight and modular implementation of a Latent Di
 | CIFAR-10  | <img src="assets/cifar10.gif" width="300"/>   | <img src="assets/cifar10_image.png" width="300"/>  |
 | CelebA  | <img src="assets/celeba.gif" width="300"/>   | <img src="assets/celeba_image.png" width="300"/>  |
 
-## **Text-to-image synthesis using CLIP-guided latent diffusion.**
+## **Text-to-image synthesis using CLIP-guided latent diffusion**
 
 The table below showcases text-to-image generation using CLIP. The dataset used is the [Asian Composite Dataset](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=618), with input text in Korean.
 
