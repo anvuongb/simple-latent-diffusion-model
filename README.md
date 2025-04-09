@@ -75,8 +75,8 @@ trainer.train(dl=data_loader, epochs=100, file_name='ldm', no_label=False)
 # Train the LDM; set 'no_label=True' if the dataset does not include labels
 
 # Load the trained models
-vae = loader.model_load('models/VAE/vae', vae, is_ema=True)
-ldm = loader.model_load('models/asian-composite-clip-ldm', ldm, is_ema=True)
+vae = loader.model_load('models/vae', vae, is_ema=True)
+ldm = loader.model_load('models/ldm', ldm, is_ema=True)
 
 # Generate samples using the trained diffusion model
 ldm.eval()
