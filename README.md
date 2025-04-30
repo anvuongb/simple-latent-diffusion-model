@@ -78,7 +78,7 @@ trainer.train(dl=data_loader, epochs=100, file_name='ldm', no_label=False)
 vae = loader.model_load('models/vae', vae, is_ema=True)
 ldm = loader.model_load('models/ldm', ldm, is_ema=True)
 
-# Generate samples using the trained diffusion model
+# Generate samples using the trained latent diffusion model
 ldm.eval()
 ldm = ldm.to(device)
 sample = ldm(n_samples=4, y = '...', gamma = 3)  # Generate 4 sample images, 'y' represents any conditions, 'gamma' means guidance scale
