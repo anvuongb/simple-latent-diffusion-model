@@ -25,7 +25,7 @@ The table below showcases text-to-image generation using CLIP. The dataset used 
 
 ## **Usage**
 
-The following example demonstrates how to use the code in this repository.
+The following example demonstrates how to train a Latent Diffusion Model and generate data using the code in this repository. If you want to train with different data, create an appropriate data generation function in the DataGenerator class and refer to the files in the configs folder to create a suitable configuration.
 
 ```python
 import torch
