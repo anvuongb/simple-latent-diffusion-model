@@ -1,4 +1,4 @@
-# Welcome to the Simple Latent Diffusion Model
+# Simple Latent Diffusion Model
 
 이 저장소는 간단한 잠재 확산 모형(Latent Diffusion Model)의 구현을 제공합니다. 코드와 내용은 지속적으로 갱신될 예정입니다.
 
