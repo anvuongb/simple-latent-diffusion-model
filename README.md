@@ -1,4 +1,4 @@
-# Welcome to the Simple Latent Diffusion Model
+# Simple Latent Diffusion Model
 
 🌐 README in Korean: [KR 한국어 버전](README_ko.md)
 
