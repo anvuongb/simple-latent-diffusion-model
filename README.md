@@ -25,8 +25,7 @@ This project is live on Hugging Face Spaces. Click the badge below to try it out
 
 [![Hugging Face Spaces](https://img.shields.io/badge/🤗%20Hugging%20Face-Spaces-blue)](https://juyeopdang-koface-ai.hf.space)
 
-**Note:**
-This demo runs on a free tier of Hugging Face Spaces. The image generation might take up to 10 minutes.
+> **Note:** This demo runs on a free tier of Hugging Face Spaces. The image generation might take up to 10 minutes.
 
 ## **Tutorials**
 
