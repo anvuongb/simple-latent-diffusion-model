@@ -19,14 +19,14 @@ The table below showcases text-to-image generation using CLIP. The dataset used 
 | A round face with voluminous, slightly long short hair, along with barely visible vocal cords, gives off a more feminine aura than a masculine one. The well-defined eyes and lips enhance the subject's delicate features, making them appear more refined and intellectual. | <img src="assets/Ex1.png" width="1000"/> |
 | The hairstyle appears slightly unpolished, lacking a refined touch. The slightly upturned eyes give off a sharp and somewhat sensitive impression. Overall, they seem to have a slender physique and appear efficient in handling tasks, though their social interactions may not be particularly smooth. | <img src="assets/Ex2.png" width="1000"/> | 
 
-### Test with Hugging Face Space
+### Interactive Demo on Hugging Face
 
-<script
-	type="module"
-	src="https://gradio.s3-us-west-2.amazonaws.com/5.25.2/gradio.js"
-></script>
+This project is live on Hugging Face Spaces. Click the badge below to try it out!
 
-<gradio-app src="https://juyeopdang-koface-ai.hf.space"></gradio-app>
+[![Hugging Face Spaces](https://img.shields.io/badge/🤗%20Hugging%20Face-Spaces-blue)](https://juyeopdang-koface-ai.hf.space)
+
+**Note:**
+This demo runs on a free tier of Hugging Face Spaces. The image generation might take up to 10 minutes.
 
 ## **Tutorials**
 
