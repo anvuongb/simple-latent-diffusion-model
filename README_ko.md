@@ -17,6 +17,14 @@
 |동그란 얼굴에 풍성하고 살짝 긴 커트머리와 거의 나오지 않은 성대가 남성보다는 여성적인 분위기를 냅니다. 또렷한 눈과 입술이 인물의 섬세함을 더욱 부각시키고 지적으로 보이게 만듭니다. | <img src="assets/Ex1.png" width="600"/> |
 |헤어 손질이 다소 미숙하여 세련된 느낌이 부족하다. 눈 끝이 올라가 있어 눈빛이 날카롭고 예민해 보인다. 전체적으로 마른 체격일 것으로 보이며, 업무 처리 능력은 뛰어나겠지만, 교우 관계는 원만하지 않을 수도 있다. | <img src="assets/Ex2.png" width="600"/> | 
 
+### Live Demo
+
+프로젝트를 직접 체험해보고 싶으신가요? 아래 배지를 클릭하여 Hugging Face Space에서 바로 실행해 보세요!
+
+[![Hugging Face Spaces](https://img.shields.io/badge/🤗%20Hugging%20Face-Spaces-blue)](https://juyeopdang-koface-ai.hf.space)
+
+> **참고:** Hugging Face의 무료 티어(CPU)로 운영되고 있어, 이미지 생성에 약 10분 정도 소요될 수 있습니다.
+
 ## 튜토리얼
 
 - [Tutorial for Latent Diffusion Model](notebook/simple_latent_diffusion_model_tutorial.ipynb)
