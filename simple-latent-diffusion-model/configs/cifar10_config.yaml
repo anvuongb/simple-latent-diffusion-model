@@ -27,13 +27,13 @@ sampler:
     sampling_T: 50
     eta: 1
 
-cond_encoder:
-    num_cond : 10
-    embed_dim : 512
-    cond_dim : 256 # Should be the same with 'cond_dim' in unet
-    cond_drop_prob: 0.2
+#cond_encoder:
+    #num_cond : 10
+    #embed_dim : 512
+    #cond_dim : 256 # Should be the same with 'cond_dim' in unet
+    #cond_drop_prob: 0.2
 
 unet:
     dim: 64
     dim_mults: [1, 2, 4, 8]
-    cond_dim : 256
+    #cond_dim : 256

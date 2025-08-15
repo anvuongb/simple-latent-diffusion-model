@@ -1,8 +1,8 @@
 encoder:
     in_channels: 3
-    resolution: 128
+    resolution: 64
     channels: 128
-    channels_multipliers: [1, 2, 4]
+    channel_multipliers: [1, 2,]
     z_channels: 3
     num_res_blocks: 2
     dropout: 0.0
@@ -10,9 +10,9 @@ encoder:
 decoder:
     in_channels: 3
     out_channels: 3
-    resolution: 128
+    resolution: 64
     channels: 128
-    channels_multipliers: [1, 2, 4]
+    channel_multipliers: [1, 2, ]
     z_channels: 6
     num_res_blocks: 2
     dropout: 0.0
@@ -28,6 +28,6 @@ sampler:
     ddim_eta: 1
 
 unet:
-    dim: 224
-    dim_mults: [1, 2, 3, 4]
+    dim: 64
+    dim_mults: [1, 2, 4, 8]
     channels: 3

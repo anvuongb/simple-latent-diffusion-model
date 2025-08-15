@@ -104,11 +104,11 @@ class DataGenerator():
         dl = DataLoader(train_data, batch_size, shuffle = True, num_workers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
-    def celeba(self, path = './datasets', batch_size : int = 16):
+    def celeba(self, path = './datasets_celeba', batch_size : int = 16):
         train_data = CelebA(path, transform = Compose([
             ToTensor(),
             CenterCrop(178),
-            Resize(128),
+            Resize(64),
             Lambda(lambda x: (x - 0.5) * 2)
             ]))
         dl = DataLoader(train_data, batch_size, shuffle = True, num_workers=self.num_workers, pin_memory=self.pin_memory)
