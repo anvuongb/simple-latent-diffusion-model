@@ -1,5 +1,5 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 
 import torch
 
@@ -17,7 +17,8 @@ from diffusion_model.network.unet import Unet
 from diffusion_model.network.unet_wrapper import UnetWrapper
 
 # Path to the configuration file
-CONFIG_PATH = './configs/celeba_config.yaml'
+# CONFIG_PATH = './configs/celeba_config.yaml'
+CONFIG_PATH = './configs/cifar10_config.yaml'
 
 
 # Set device
@@ -29,7 +30,8 @@ loader = Loader()
 data_generator = DataGenerator()
 
 # Load CIFAR-10 dataset
-data_loader = data_generator.celeba(batch_size=128)
+# data_loader = data_generator.celeba(batch_size=128)
+data_loader = data_generator.cifar10(batch_size=512)
 
 ## Load CLIP model
 #clip = KoCLIPWrapper() # Any CLIP model from Hugging Face
@@ -38,7 +40,7 @@ data_loader = data_generator.celeba(batch_size=128)
 # Train the Variational Autoencoder (VAE)
 vae = VariationalAutoEncoder(CONFIG_PATH)  # Initialize the VAE model
 trainer = Trainer(vae, vae.loss)  # Create a trainer for the VAE
-trainer.train(dl=data_loader, epochs=100, file_name='vae_celeba', no_label=True)  # Train the VAE
+trainer.train(dl=data_loader, epochs=200, file_name='vae', no_label=True)  # Train the VAE
 
 ## Train the Latent Diffusion Model (LDM)
 #sampler = DDIM(CONFIG_PATH)  # Initialize the DDIM sampler
