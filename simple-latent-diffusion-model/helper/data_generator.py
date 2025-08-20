@@ -99,9 +99,9 @@ class DataGenerator():
         self.num_workers = num_workers
         self.pin_memory = pin_memory
         
-    def cifar10(self, path = './datasets', batch_size : int = 64, train : bool = True):
+    def cifar10(self, path = './datasets', batch_size : int = 64, train : bool = True, shuffle=True):
         train_data = CIFAR10(path, download = True, train = train, transform = self.transform)
-        dl = DataLoader(train_data, batch_size, shuffle = True, num_workers=self.num_workers, pin_memory=self.pin_memory)
+        dl = DataLoader(train_data, batch_size, shuffle = shuffle, num_workers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
     def celeba(self, path = './datasets_celeba', batch_size : int = 16):
@@ -111,7 +111,7 @@ class DataGenerator():
             Resize(64),
             Lambda(lambda x: (x - 0.5) * 2)
             ]))
-        dl = DataLoader(train_data, batch_size, shuffle = True, num_workers=self.num_workers, pin_memory=self.pin_memory)
+        dl = DataLoader(train_data, batch_size, shuffle = shuffle, num_workers=self.num_workers, pin_memory=self.pin_memory)
         return dl
     
     def composite(self, path, text_path, batch_size : int = 16, is_process: bool = False):
@@ -120,7 +120,7 @@ class DataGenerator():
             model_name = "Bingsu/clip-vit-base-patch32-ko"
             processor = AutoProcessor.from_pretrained(model_name, use_fast=False)
         dataset = CompositeDataset(path, text_path, processor)
-        return DataLoader(dataset, batch_size=batch_size, shuffle=True,
+        return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle,
                           num_workers=self.num_workers, pin_memory=self.pin_memory)
 
     def random_data(self, size, batch_size : int = 4):
